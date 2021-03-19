@@ -21,14 +21,20 @@ body {
 
 #input {
   width: 40vw;
-  font-size: 2rem;
+  font-size: 3rem;
   padding: 4px 7px;
   border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 2px 2px 3px #6666669c;
+  user-select: none;
+}
+
+#input:focus {
+  outline: none;
 }
 
 #result {
   margin-top: 1rem;
   font-size: 4rem;
+  min-height: 5rem;
 }
