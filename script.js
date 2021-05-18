@@ -4,7 +4,10 @@ function handleEvent(e) {
   if (e.type === 'submit') e.preventDefault()
 
   const input = document.querySelector('#input').value
-  handleInput(input)
+  const result = handleInput(input)
+
+  // print result
+  document.querySelector('#result').innerHTML = result
 }
 
 function handleInput(input) {
@@ -17,9 +20,7 @@ function handleInput(input) {
   } else {
     result = computeElapsedTime(parameters)
   }
-
-  const resultElement = document.querySelector('#result')
-  resultElement.innerHTML = result
+  return result
 }
 
 const mod = (n, m) => ((n % m) + m) % m
@@ -30,7 +31,8 @@ const computeTimeStroke = (parameters, op) => {
   const c = op === '+' ? 1 : -1
 
   const [HOUR = 0, MINUTE = 0, SECOND = 0] = first.split(':')
-  const regxp = /(?<hours>\d+(?=h))?h?(?<minutes>\d+(?=m))?m?(?<seconds>\d+(?=s))?/i
+  const regxp =
+    /(?<hours>\d+(?=h))?h?(?<minutes>\d+(?=m))?m?(?<seconds>\d+(?=s))?/i
   const match = regxp.exec(second)
   const { hours = 0, minutes = 0, seconds = 0 } = match.groups
 
