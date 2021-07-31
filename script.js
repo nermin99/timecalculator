@@ -1,4 +1,6 @@
-document.querySelector('#input').addEventListener('keyup', handleEvent)
+var debounceFn = debounce(handleEvent, 500)
+
+document.querySelector('#input').addEventListener('keyup', debounceFn)
 
 function handleEvent(e) {
   if (e.type === 'submit') e.preventDefault()
@@ -132,5 +134,22 @@ const evalExpr = (input) => {
     )
     const result = h + m + s
     return result === '' ? '0 hours 0 minutes 0 seconds' : result
+  }
+}
+
+/**
+ * Debounce function
+ * @param {Function} fn to be debounced
+ * @param {Number} delay time in milliseconds
+ */
+function debounce(fn, delay) {
+  let timer = null
+  return function () {
+    const context = this
+    const args = arguments
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      fn.apply(context, args)
+    }, delay)
   }
 }
