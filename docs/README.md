@@ -1,5 +1,7 @@
 # Timecalculator
 
+https://nermin99.github.io/timecalculator/
+
 ![timecalculator](img/timecalculator.png)
 
 ## Examples
