@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/timecalculator/static/css/main.8d76e0ac.chunk.css",
+    "main.js": "/timecalculator/static/js/main.a7fc0f27.chunk.js",
+    "main.js.map": "/timecalculator/static/js/main.a7fc0f27.chunk.js.map",
+    "runtime-main.js": "/timecalculator/static/js/runtime-main.46a34f76.js",
+    "runtime-main.js.map": "/timecalculator/static/js/runtime-main.46a34f76.js.map",
+    "static/js/2.1ee21f82.chunk.js": "/timecalculator/static/js/2.1ee21f82.chunk.js",
+    "static/js/2.1ee21f82.chunk.js.map": "/timecalculator/static/js/2.1ee21f82.chunk.js.map",
+    "static/js/3.2cfaee74.chunk.js": "/timecalculator/static/js/3.2cfaee74.chunk.js",
+    "static/js/3.2cfaee74.chunk.js.map": "/timecalculator/static/js/3.2cfaee74.chunk.js.map",
+    "index.html": "/timecalculator/index.html",
+    "static/css/main.8d76e0ac.chunk.css.map": "/timecalculator/static/css/main.8d76e0ac.chunk.css.map",
+    "static/js/2.1ee21f82.chunk.js.LICENSE.txt": "/timecalculator/static/js/2.1ee21f82.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.46a34f76.js",
+    "static/js/2.1ee21f82.chunk.js",
+    "static/css/main.8d76e0ac.chunk.css",
+    "static/js/main.a7fc0f27.chunk.js"
+  ]
+}
