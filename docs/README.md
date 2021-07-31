@@ -1,6 +1,6 @@
 # Timecalculator
 
-https://nermin99.github.io/timecalculator/
+https://timecalculator.se/
 
 ![timecalculator](img/timecalculator.png)
 
