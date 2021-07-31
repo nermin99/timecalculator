@@ -1,18 +1,3 @@
-var debounceFn = debounce(handleEvent, 500)
-
-document.querySelector('#input').addEventListener('keyup', debounceFn)
-
-function handleEvent(e) {
-  if (e.type === 'submit') e.preventDefault()
-
-  const input = document.querySelector('#input').value
-
-  const result = evalExpr(input)
-  const output = input === '' ? '' : result
-
-  document.querySelector('#result').innerHTML = output
-}
-
 const operations = new Map([
   ['+', (op1, op2) => op1 + op2],
   ['-', (op1, op2) => op1 - op2],
@@ -108,7 +93,7 @@ const checkTimeStroke = (expr) => {
   return flag
 }
 
-const evalExpr = (input) => {
+export const evalExpr = (input) => {
   // const rx = /\(.+?\)/g
   const enclosedExprRegex = new RegExp(`\\([\\d${operationsStr} ]+\\)`, 'g')
 
@@ -134,22 +119,5 @@ const evalExpr = (input) => {
     )
     const result = h + m + s
     return result === '' ? '0 hours 0 minutes 0 seconds' : result
-  }
-}
-
-/**
- * Debounce function
- * @param {Function} fn to be debounced
- * @param {Number} delay time in milliseconds
- */
-function debounce(fn, delay) {
-  let timer = null
-  return function () {
-    const context = this
-    const args = arguments
-    clearTimeout(timer)
-    timer = setTimeout(() => {
-      fn.apply(context, args)
-    }, delay)
   }
 }
