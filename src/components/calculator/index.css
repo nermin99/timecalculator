@@ -33,9 +33,9 @@
 .input {
   color: var(--color-3);
   background: var(--color-2);
-  box-shadow: var(--shadow) var(--shadow) calc(2 * var(--shadow)) #1d222a,
+  box-shadow: var(--shadow) var(--shadow) calc(2 * var(--shadow)) #1b2027,
     calc(-1 * var(--shadow)) calc(-1 * var(--shadow)) calc(2 * var(--shadow))
-      #272e38;
+      #29303b;
 }
 
 .result {
