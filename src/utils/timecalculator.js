@@ -47,6 +47,7 @@ const replaceTimes = (str) => {
  * 3600 > 10800 --> 10800 - 3600 = 7200
  */
 const evaluate = (expression) => {
+  // eslint-disable-next-line
   const rx = /(\d+)\s?([\+\-\>])\s?(\d+)/g
 
   let str = `${expression}`.replace('(', '').replace(')', '')
