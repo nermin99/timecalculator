@@ -1,6 +1,4 @@
-# Timecalculator
-
-https://timecalculator.se/
+# Time Calculator ⏱
 
 ![timecalculator](img/timecalculator.png)
 
