@@ -31,3 +31,11 @@
 `+` and `-` is used for addition and subtraction of time durations but can also be used to add/subtract durations to time strokes.
 
 `(` and `)` is used just, like in math, for prioritization.
+
+## Deployment
+
+Run the following to build and deploy the site to github pages
+
+```shell
+npm run deploy
+```
