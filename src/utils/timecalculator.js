@@ -75,7 +75,7 @@ const secondsToTime = (seconds) => {
   let rem = time
 
   const times = {
-    hour: Math.floor(rem / (60 * 60)),
+    hour: Math.floor(rem / (60 * 60)) % 24,
     minute: Math.floor(time / 60) % 60,
     second: time % 60,
   }
