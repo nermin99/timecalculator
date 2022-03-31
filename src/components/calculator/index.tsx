@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { evalExpr } from 'src/utils/timecalculator'
+import evalExpr from 'src/utils/timecalculator'
 import { debounce } from 'src/utils/helpers'
 
 import './index.css'

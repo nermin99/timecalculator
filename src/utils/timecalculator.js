@@ -94,7 +94,7 @@ const checkTimeStroke = (expr) => {
   return flag
 }
 
-export const evalExpr = (input) => {
+const evalExpr = (input) => {
   // const rx = /\(.+?\)/g
   const enclosedExprRegex = new RegExp(`\\([\\d${operationsStr} ]+\\)`, 'g')
 
@@ -122,3 +122,5 @@ export const evalExpr = (input) => {
     return result === '' ? '0 hours 0 minutes 0 seconds' : result
   }
 }
+
+export default evalExpr
