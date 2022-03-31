@@ -116,9 +116,9 @@ const evalExpr = (input) => {
     return `${h}:${m}` + (s === '00' ? '' : `:${s}`)
   } else {
     const [h, m, s] = Object.entries(times).map(([unit, val]) =>
-      val === 0 ? '' : `${val} ${unit}${val === 1 ? '' : 's'} `
+      val === 0 ? '' : `${val} ${unit}${val === 1 ? '' : 's'}`
     )
-    const result = h + m + s
+    const result = [h, m, s].filter((str) => str !== '').join(' ')
     return result === '' ? '0 hours 0 minutes 0 seconds' : result
   }
 }
