@@ -8,6 +8,10 @@ test('testing +', () => {
   expect(evalExpr('08:00 + 1h30m')).toBe('09:30')
 })
 
+test('testing - and seconds', () => {
+  expect(evalExpr('08:00 - 30m10s')).toBe('07:29:50')
+})
+
 test('should wrap around 24h', () => {
   expect(evalExpr('23:00 + 2h')).toBe('01:00')
 })
