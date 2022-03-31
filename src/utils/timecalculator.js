@@ -10,7 +10,7 @@ const operationsStr = [...operations.keys()].join('') // +->
  * Converts explicit time durations to seconds.
  * 1h - 20m + 10s ---> 3600 - 1200 + 10
  */
-const replaceDurations = (str) => {
+const timeDurationsToSeconds = (str) => {
   const rx = /(\d+h)?(\d+m)?(\d+s)?/g
   const matches = str.matchAll(rx)
 
@@ -26,10 +26,10 @@ const replaceDurations = (str) => {
 }
 
 /**
- * Converts timestrokes (from midnight) to seconds.
- * 05:00 > 13:00 ---> 18000 > 46800
+ * Converts time strokes (from midnight) to seconds.
+ * 01:00 > 02:00 ---> 3600 > 7200
  */
-const replaceTimes = (str) => {
+const timeStrokesToSeconds = (str) => {
   const rx = /(\d{2}):(\d{2}):?(\d{2})?/g
   const matches = str.matchAll(rx)
 
@@ -44,7 +44,7 @@ const replaceTimes = (str) => {
 
 /**
  * Evaluate an expression like
- * 3600 > 10800 --> 10800 - 3600 = 7200
+ * 3600 > 7200 --> 7200 - 3600 = 3600
  */
 const evaluate = (expression) => {
   // eslint-disable-next-line
@@ -83,22 +83,26 @@ const secondsToTime = (seconds) => {
 }
 
 /**
- * Chech whether timestroke or elapsed time is calculated.
+ * Check whether time stroke or elapsed time is calculated.
  * If '>' is in expression, not a timestroke.
  * Regex matches e.g '18:30 + 1h' but not e.g '2h - 30m'.
  * TODO: match e.g '1h + 18:30'
  */
-const checkTimeStroke = (expr) => {
+const isTimeStroke = (expr) => {
   let flag = !expr.includes('>') //
   flag = flag && /\d+\s?[+-]\s?\d+[hms]/g.test(expr)
   return flag
 }
 
+/**
+ * Main function which takes the user input.
+ */
 const evalExpr = (input) => {
   // const rx = /\(.+?\)/g
-  const enclosedExprRegex = new RegExp(`\\([\\d${operationsStr} ]+\\)`, 'g')
+  const enclosedExprRegex = new RegExp(`\\([\\d${operationsStr} ]+\\)`, 'g') // Match all inside (including) paranthesis
+  // const enclosedExprRegex = new RegExp(`[\\d${operationsStr} ]+`, 'g')
 
-  let currExpr = replaceTimes(replaceDurations(input))
+  let currExpr = timeDurationsToSeconds(timeStrokesToSeconds(input))
   let match = currExpr.match(enclosedExprRegex)
 
   while (match) {
@@ -109,9 +113,7 @@ const evalExpr = (input) => {
   const seconds = evaluate(currExpr)
   const times = secondsToTime(seconds)
 
-  const isTimeStroke = checkTimeStroke(input)
-
-  if (isTimeStroke) {
+  if (isTimeStroke(input)) {
     const [h, m, s] = Object.values(times).map((t) => (t < 10 ? `0${t}` : t))
     return `${h}:${m}` + (s === '00' ? '' : `:${s}`)
   } else {
