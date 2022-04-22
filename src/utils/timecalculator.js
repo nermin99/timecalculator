@@ -4,8 +4,6 @@ const operations = new Map([
   ['>', (op1, op2) => op2 - op1],
 ])
 
-const operationsStr = [...operations.keys()].join('') // +->
-
 /**
  * Converts explicit time durations to seconds.
  * 1h - 20m + 10s ---> 3600 - 1200 + 10
@@ -30,9 +28,9 @@ const timeDurationsToSeconds = (str) => {
  * 01:00 > 02:00 ---> 3600 > 7200
  */
 const timeStrokesToSeconds = (str) => {
-  const rx = /(\d{2}):(\d{2}):?(\d{2})?/g
-  const matches = str.matchAll(rx)
+  const re = /(\d{2}):(\d{2}):?(\d{2})?/g
 
+  const matches = str.matchAll(re)
   for (const [match, hours, minutes, seconds = 0] of matches) {
     str = str.replace(
       match,
@@ -42,28 +40,27 @@ const timeStrokesToSeconds = (str) => {
   return str
 }
 
+// '3600 > 7200 + 7200 > 10800' --> '3600 + 3600'
+export const replaceDurations = (str) => {
+  const re = /(\d+)\s?(>)\s?(\d+)/g
+
+  const matches = str.matchAll(re)
+  for (const [match, op1, op, op2] of matches) {
+    str = str.replace(match, operations.get(op)(op1, op2))
+  }
+  return str
+}
+
+// '3600 + 3600' --> 7200
+export const evalStr = (str) => Function(`'use strict'; return (${str})`)()
+
 /**
  * Evaluate an expression like
- * 3600 > 7200 --> 7200 - 3600 = 3600
+ * '3600 > 7200 + 7200 > 10800' --> 7200
  */
-const evaluate = (expression) => {
-  // eslint-disable-next-line
-  const rx = /(\d+)\s?([\+\-\>])\s?(\d+)/g
-
-  let str = `${expression}`.replace('(', '').replace(')', '')
-  const match = rx.exec(str)
-
-  if (match) {
-    let [toReplace, op1, op, op2] = match
-    op1 = Number(op1)
-    op2 = Number(op2)
-
-    str = str.replace(toReplace, operations.get(op)(op1, op2))
-
-    return evaluate(str)
-  } else {
-    return Number(str)
-  }
+export const evaluate = (str) => {
+  str = replaceDurations(str)
+  return evalStr(str)
 }
 
 /**
@@ -84,33 +81,42 @@ const secondsToTime = (seconds) => {
 
 /**
  * Check whether time stroke or elapsed time is calculated.
- * If '>' is in expression, not a timestroke.
- * Regex matches e.g '18:30 + 1h' but not e.g '2h - 30m'.
- * TODO: match e.g '1h + 18:30'
+ * Is a time stroke if any time duration is added/subtracted to any time stroke.
+ * Regex matches e.g '18:30 + 1h' but not e.g '2h - 30m' or '12:00 > 13:00'.
  */
-const isTimeStroke = (expr) => {
-  let flag = !expr.includes('>') //
-  flag = flag && /\d+\s?[+-]\s?\d+[hms]/g.test(expr)
-  return flag
+export const isTimeStroke = (str) => {
+  const reBase = '(\\d{2}):(\\d{2}):?(\\d{2})?'
+  const reFront = new RegExp(`\\d+[hms]\\s?[+-]\\s?${reBase}`)
+  const reBack = new RegExp(`${reBase}\\s?[+-]\\s?\\d+[hms]`)
+  return reFront.test(str) || reBack.test(str)
+}
+
+const evaluateParentheses = (input) => {
+  const rx = /(\([^(]*?\))/g
+
+  const match = input.match(rx)?.[0]
+  if (!match) return input
+
+  const res = evaluate(timeDurationsToSeconds(timeStrokesToSeconds(match)))
+  return evaluateParentheses(input.replace(match, res))
 }
 
 /**
  * Main function which takes the user input.
  */
-const evalExpr = (input) => {
-  // const rx = /\(.+?\)/g
-  const enclosedExprRegex = new RegExp(`\\([\\d${operationsStr} ]+\\)`, 'g') // Match all inside (including) paranthesis
-  // const enclosedExprRegex = new RegExp(`[\\d${operationsStr} ]+`, 'g')
+export const evalExpr = (input) => {
+  let str = input
 
-  let currExpr = timeDurationsToSeconds(timeStrokesToSeconds(input))
-  let match = currExpr.match(enclosedExprRegex)
-
-  while (match) {
-    currExpr = currExpr.replace(match[0], evaluate(match[0]))
-    match = currExpr.match(enclosedExprRegex)
+  str = timeStrokesToSeconds(str)
+  str = timeDurationsToSeconds(str)
+  str = replaceDurations(str)
+  try {
+    str = evalStr(str)
+  } catch (error) {
+    str = 0
   }
 
-  const seconds = evaluate(currExpr)
+  const seconds = str
   const times = secondsToTime(seconds)
 
   if (isTimeStroke(input)) {
@@ -124,5 +130,3 @@ const evalExpr = (input) => {
     return result === '' ? '0 hours 0 minutes 0 seconds' : result
   }
 }
-
-export default evalExpr
