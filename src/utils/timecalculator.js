@@ -6,9 +6,9 @@ const operations = new Map([
 
 /**
  * Converts explicit time durations to seconds.
- * 1h - 20m + 10s ---> 3600 - 1200 + 10
+ * '1h30m20s' ---> '5420'
  */
-const timeDurationsToSeconds = (str) => {
+export const timeDurationsToSeconds = (str) => {
   const rx = /(\d+h)?(\d+m)?(\d+s)?/g
   const matches = str.matchAll(rx)
 
@@ -25,9 +25,9 @@ const timeDurationsToSeconds = (str) => {
 
 /**
  * Converts time strokes (from midnight) to seconds.
- * 01:00 > 02:00 ---> 3600 > 7200
+ * '01:30:40' ---> '5440'
  */
-const timeStrokesToSeconds = (str) => {
+export const timeStrokesToSeconds = (str) => {
   const re = /(\d{2}):(\d{2}):?(\d{2})?/g
 
   const matches = str.matchAll(re)
@@ -40,7 +40,7 @@ const timeStrokesToSeconds = (str) => {
   return str
 }
 
-// '3600 > 7200 + 7200 > 10800' --> '3600 + 3600'
+// '3600 > 7200' --> '3600'
 export const replaceDurations = (str) => {
   const re = /(\d+)\s?(>)\s?(\d+)/g
 
@@ -52,6 +52,7 @@ export const replaceDurations = (str) => {
 }
 
 // '3600 + 3600' --> 7200
+// /[hms\d\s\+\-\>\:\(\)]/g
 export const evalStr = (str) => Function(`'use strict'; return (${str})`)()
 
 /**

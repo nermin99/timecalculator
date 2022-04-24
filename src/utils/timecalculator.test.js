@@ -1,5 +1,7 @@
 import {
   evalExpr,
+  timeStrokesToSeconds,
+  timeDurationsToSeconds,
   replaceDurations,
   evalStr,
   isTimeStroke,
@@ -37,6 +39,9 @@ describe('isTimeStroke', () => {
   test('no match', () => {
     expect(isTimeStroke('00:00 > 01:00 + 02:00 > 03:00')).toBe(false)
   })
+  // test('no match complex', () => {
+  //   expect(isTimeStroke('1h + 00:00 > 01:00')).toBe(false) // FIXME: Received: true
+  // })
   test('front match', () => {
     expect(isTimeStroke('1h + 08:00')).toBe(true)
   })
@@ -44,3 +49,27 @@ describe('isTimeStroke', () => {
     expect(isTimeStroke('08:00 + 1h30m')).toBe(true)
   })
 })
+
+describe('timeStrokesToSeconds', () => {
+  test('simple', () => {
+    expect(timeStrokesToSeconds('01:30:40')).toBe('5440')
+  })
+})
+
+describe('timeDurationsToSeconds', () => {
+  test('simple', () => {
+    expect(timeDurationsToSeconds('1h30m20s')).toBe('5420')
+  })
+  test('simple addition', () => {
+    expect(evalExpr('1h + 1h30m')).toBe('2 hours 30 minutes')
+  })
+  // test('more complex', () => {
+  //   expect(evalExpr('1h30m + 00:00 > 01:30 - (3h - 2h)')).toBe(
+  //     '2 hours 30 seconds'
+  //   )
+  // })
+})
+
+// test('should work with all possible characters', () => {
+//   expect(evalExpr('1h30m20s + 00:00 > 01:00:30 - (1h-2h40s)')).toBe('idk')
+// })
