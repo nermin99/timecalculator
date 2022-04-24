@@ -56,15 +56,6 @@ export const replaceDurations = (str) => {
 export const evalStr = (str) => Function(`'use strict'; return (${str})`)()
 
 /**
- * Evaluate an expression like
- * '3600 > 7200 + 7200 > 10800' --> 7200
- */
-export const evaluate = (str) => {
-  str = replaceDurations(str)
-  return evalStr(str)
-}
-
-/**
  * Get the number of hours, minutes and seconds
  * from the total seconds.
  */
@@ -90,16 +81,6 @@ export const isTimeStroke = (str) => {
   const reFront = new RegExp(`\\d+[hms]\\s?[+-]\\s?${reBase}`)
   const reBack = new RegExp(`${reBase}\\s?[+-]\\s?\\d+[hms]`)
   return reFront.test(str) || reBack.test(str)
-}
-
-const evaluateParentheses = (input) => {
-  const rx = /(\([^(]*?\))/g
-
-  const match = input.match(rx)?.[0]
-  if (!match) return input
-
-  const res = evaluate(timeDurationsToSeconds(timeStrokesToSeconds(match)))
-  return evaluateParentheses(input.replace(match, res))
 }
 
 /**
