@@ -63,11 +63,9 @@ describe('timeDurationsToSeconds', () => {
   test('simple addition', () => {
     expect(evalExpr('1h + 1h30m')).toBe('2 hours 30 minutes')
   })
-  // test('more complex', () => {
-  //   expect(evalExpr('1h30m + 00:00 > 01:30 - (3h - 2h)')).toBe(
-  //     '2 hours 30 seconds'
-  //   )
-  // })
+  test('more complex', () => {
+    expect(evalExpr('00:00 > 01:00 + 1h30m')).toBe('2 hours 30 minutes') // FIXME: Received: "02:30"
+  })
 })
 
 // test('should work with all possible characters', () => {
