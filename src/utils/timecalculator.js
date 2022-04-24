@@ -5,6 +5,23 @@ const operations = new Map([
 ])
 
 /**
+ * Converts time strokes (from midnight) to seconds.
+ * '01:30:40' ---> '5440'
+ */
+export const timeStrokesToSeconds = (str) => {
+  const re = /(\d{2}):(\d{2}):?(\d{2})?/g
+
+  const matches = str.matchAll(re)
+  for (const [match, hours, minutes, seconds = 0] of matches) {
+    str = str.replace(
+      match,
+      Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds)
+    )
+  }
+  return str
+}
+
+/**
  * Converts explicit time durations to seconds.
  * '1h30m20s' ---> '5420'
  */
@@ -18,23 +35,6 @@ export const timeDurationsToSeconds = (str) => {
     str = str.replace(
       match,
       parseInt(hours) * 3600 + parseInt(minutes) * 60 + parseInt(seconds)
-    )
-  }
-  return str
-}
-
-/**
- * Converts time strokes (from midnight) to seconds.
- * '01:30:40' ---> '5440'
- */
-export const timeStrokesToSeconds = (str) => {
-  const re = /(\d{2}):(\d{2}):?(\d{2})?/g
-
-  const matches = str.matchAll(re)
-  for (const [match, hours, minutes, seconds = 0] of matches) {
-    str = str.replace(
-      match,
-      Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds)
     )
   }
   return str
