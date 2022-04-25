@@ -36,17 +36,20 @@ test('should evaluate string of mathematical expressions', () => {
 })
 
 describe('isTimeStroke', () => {
+  test('no match only duration', () => {
+    expect(isTimeStroke('1h-30m')).toBe(false)
+  })
   test('no match', () => {
-    expect(isTimeStroke('00:00 > 01:00 + 02:00 > 03:00')).toBe(false)
+    expect(isTimeStroke('00:00>01:00+02:00>03:00')).toBe(false)
   })
   // test('no match complex', () => {
   //   expect(isTimeStroke('1h + 00:00 > 01:00')).toBe(false) // FIXME: Received: true
   // })
   test('front match', () => {
-    expect(isTimeStroke('1h + 08:00')).toBe(true)
+    expect(isTimeStroke('1h+08:00')).toBe(true)
   })
   test('back match', () => {
-    expect(isTimeStroke('08:00 + 1h30m')).toBe(true)
+    expect(isTimeStroke('08:00+1h30m')).toBe(true)
   })
 })
 

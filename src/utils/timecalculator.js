@@ -71,12 +71,12 @@ const secondsToTime = (seconds) => {
 /**
  * Check whether time stroke or elapsed time is calculated.
  * Is a time stroke if any time duration is added/subtracted to any time stroke.
- * Regex matches e.g '18:30 + 1h' but not e.g '2h - 30m' or '12:00 > 13:00'.
+ * Regex matches e.g '18:30+1h' but not e.g '1h-30m' or '12:00>13:00'.
  */
 export const isTimeStroke = (str) => {
   const reBase = '(\\d{2}):(\\d{2}):?(\\d{2})?'
-  const reFront = new RegExp(`\\d+[hms]\\s?[+-]\\s?${reBase}`)
-  const reBack = new RegExp(`${reBase}\\s?[+-]\\s?\\d+[hms]`)
+  const reFront = new RegExp(`\\d+[hms][+-]${reBase}`)
+  const reBack = new RegExp(`${reBase}[+-]\\d+[hms]`)
   return reFront.test(str) || reBack.test(str)
 }
 
@@ -84,9 +84,9 @@ export const isTimeStroke = (str) => {
  * Main function which takes the user input.
  */
 export const evalExpr = (input) => {
-  let str = input.replace(/\s+/g, '') // remove all whitespace
+  const trimInput = input.replace(/\s+/g, '') // remove all whitespace
 
-  str = timeStrokesToSeconds(str)
+  let str = timeStrokesToSeconds(trimInput)
   str = timeDurationsToSeconds(str)
   str = replaceDurations(str)
   try {
@@ -98,7 +98,7 @@ export const evalExpr = (input) => {
   const seconds = str
   const times = secondsToTime(seconds)
 
-  if (isTimeStroke(input)) {
+  if (isTimeStroke(trimInput)) {
     const [h, m, s] = Object.values(times).map((t) => (t < 10 ? `0${t}` : t))
     return `${h}:${m}` + (s === '00' ? '' : `:${s}`)
   } else {
