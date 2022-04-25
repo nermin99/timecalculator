@@ -13,10 +13,7 @@ export const timeStrokesToSeconds = (str) => {
 
   const matches = str.matchAll(re)
   for (const [match, hours, minutes, seconds = 0] of matches) {
-    str = str.replace(
-      match,
-      Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds)
-    )
+    str = str.replace(match, Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds))
   }
   return str
 }
