@@ -20,9 +20,11 @@
 
 ### Definitions:
 
-`time stroke` The time of day **HH:MM:SS** or just **HH:MM** (24-hour clock).
+`time stroke` The time of day **HH:MM:SS** or just **HH:MM** (24-hour clock). `E.g. 17:30`
 
-`time duration` The elapsed time between two time strokes in hours **h**, minutes **m**, and (optionally) seconds **s**.
+`time duration` The amount of time in hours **h**, minutes **m**, and (optionally) seconds **s**. `E.g. 1h30m`
+
+`time interval` The amount of time between two time strokes, which when evaluated, will result in a time duration. `E.g. 12:00 > 13:30`
 
 ### Operators:
 
