@@ -40,9 +40,9 @@ export const timeDurationsToSeconds = (str) => {
   return str
 }
 
-// '3600 > 7200' --> '3600'
+// '3600>7200' --> '3600'
 export const replaceDurations = (str) => {
-  const re = /(\d+)\s?(>)\s?(\d+)/g
+  const re = /(\d+)(>)(\d+)/g
 
   const matches = str.matchAll(re)
   for (const [match, op1, op, op2] of matches) {
@@ -51,8 +51,8 @@ export const replaceDurations = (str) => {
   return str
 }
 
-// '3600 + 3600' --> 7200
-// /[hms\d\s\+\-\>\:\(\)]/g
+// '3600+3600' --> 7200
+// /[hms\d\+\-\>\:\(\)]/g
 export const evalStr = (str) => Function(`'use strict'; return (${str})`)()
 
 /**
@@ -87,7 +87,7 @@ export const isTimeStroke = (str) => {
  * Main function which takes the user input.
  */
 export const evalExpr = (input) => {
-  let str = input
+  let str = input.replace(/\s+/g, '') // remove all whitespace
 
   str = timeStrokesToSeconds(str)
   str = timeDurationsToSeconds(str)
