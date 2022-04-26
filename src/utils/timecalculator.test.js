@@ -1,5 +1,5 @@
 import {
-  trim,
+  strip,
   evalExpr,
   timeStrokesToSeconds,
   timeDurationsToSeconds,
@@ -33,7 +33,7 @@ describe('replaceIntervals', () => {
     expect(replaceIntervals('01:00>02:00')).toBe('3600')
   })
   test('interval complex', () => {
-    expect(replaceIntervals(trim('00:00 > 01:00 + 02:00 > 03:00'))).toBe('3600+3600')
+    expect(replaceIntervals(strip('00:00 > 01:00 + 02:00 > 03:00'))).toBe('3600+3600')
   })
 })
 
@@ -43,19 +43,19 @@ test('should evaluate string of mathematical expressions', () => {
 
 describe('isTimeStroke', () => {
   test('no match only duration', () => {
-    expect(isTimeStroke(trim('1h - 30m'))).toBe(false)
+    expect(isTimeStroke(strip('1h - 30m'))).toBe(false)
   })
   test('no match', () => {
-    expect(isTimeStroke(trim('00:00 > 01:00 + 02:00 > 03:00'))).toBe(false)
+    expect(isTimeStroke(strip('00:00 > 01:00 + 02:00 > 03:00'))).toBe(false)
   })
   test('no match complex', () => {
-    expect(evalExpr(trim('00:00 > 01:00 + 1h'))).toBe('2 hours')
+    expect(evalExpr(strip('00:00 > 01:00 + 1h'))).toBe('2 hours')
   })
   test('front match', () => {
-    expect(isTimeStroke(trim('1h + 08:00'))).toBe(true)
+    expect(isTimeStroke(strip('1h + 08:00'))).toBe(true)
   })
   test('back match', () => {
-    expect(isTimeStroke(trim('08:00 + 1h30m'))).toBe(true)
+    expect(isTimeStroke(strip('08:00 + 1h30m'))).toBe(true)
   })
 })
 
