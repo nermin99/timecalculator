@@ -3,7 +3,7 @@ import {
   evalExpr,
   timeStrokesToSeconds,
   timeDurationsToSeconds,
-  replaceDurations,
+  replaceIntervals,
   evalStr,
   isTimeStroke,
 } from './timecalculator'
@@ -28,8 +28,13 @@ test('the priority of operators', () => {
   expect(evalExpr('01:00 > 02:00 + 02:00 > 03:00')).toBe('2 hours')
 })
 
-test('replacing durations properly', () => {
-  expect(replaceDurations('3600>7200+7200>10800')).toBe('3600+3600')
+describe('replaceIntervals', () => {
+  test('replacing intervals properly', () => {
+    expect(replaceIntervals('01:00>02:00')).toBe('3600')
+  })
+  test('interval complex', () => {
+    expect(replaceIntervals(trim('00:00 > 01:00 + 02:00 > 03:00'))).toBe('3600+3600')
+  })
 })
 
 test('should evaluate string of mathematical expressions', () => {
@@ -44,7 +49,7 @@ describe('isTimeStroke', () => {
     expect(isTimeStroke(trim('00:00 > 01:00 + 02:00 > 03:00'))).toBe(false)
   })
   test('no match complex', () => {
-    expect(isTimeStroke(trim('00:00 > 01:00 + 1h'))).toBe(false) // FIXME: Received: true
+    expect(evalExpr(trim('00:00 > 01:00 + 1h'))).toBe('2 hours')
   })
   test('front match', () => {
     expect(isTimeStroke(trim('1h + 08:00'))).toBe(true)
@@ -67,11 +72,11 @@ describe('timeDurationsToSeconds', () => {
   test('simple addition', () => {
     expect(evalExpr('1h + 1h30m')).toBe('2 hours 30 minutes')
   })
-  // test('more complex', () => {
-  //   expect(evalExpr('00:00 > 01:00 + 1h30m')).toBe('2 hours 30 minutes') // FIXME: Received: "02:30"
-  // })
+  test('more complex', () => {
+    expect(evalExpr('00:00 > 01:00 + 1h30m')).toBe('2 hours 30 minutes')
+  })
 })
 
-// test('should work with all possible characters', () => {
-//   expect(evalExpr('1h30m20s + 00:00 > 01:00:30 - (1h-2h40s)')).toBe('idk')
-// })
+test('should work with all possible characters', () => {
+  expect(evalExpr('1h30m20s + 01:00 > 02:30:40 - (1h30m-2h)')).toBe('3 hours 31 minutes')
+})

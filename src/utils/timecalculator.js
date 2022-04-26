@@ -37,13 +37,16 @@ export const timeDurationsToSeconds = (str) => {
   return str
 }
 
-// '3600>7200' --> '3600'
-export const replaceDurations = (str) => {
-  const re = /(\d+)(>)(\d+)/g
+// '01:00>02:00' --> '3600'
+export const replaceIntervals = (str) => {
+  const reStroke = '(\\d{2}:\\d{2}(?::\\d{2})?)'
+  const reInterval = `${reStroke}\\>${reStroke}`
 
-  const matches = str.matchAll(re)
-  for (const [match, op1, op, op2] of matches) {
-    str = str.replace(match, operations.get(op)(op1, op2))
+  const matches = str.matchAll(reInterval)
+  for (const [match, stroke1, stroke2] of matches) {
+    const t1 = timeStrokesToSeconds(stroke1)
+    const t2 = timeStrokesToSeconds(stroke2)
+    str = str.replace(match, Number(t2) - Number(t1))
   }
   return str
 }
@@ -89,9 +92,9 @@ export const trim = (str) => str.replace(/\s+/g, '')
 export const evalExpr = (input) => {
   const trimInput = trim(input)
 
-  let str = timeStrokesToSeconds(trimInput)
+  const parsedInput = replaceIntervals(trimInput)
+  let str = timeStrokesToSeconds(parsedInput)
   str = timeDurationsToSeconds(str)
-  str = replaceDurations(str)
   try {
     str = evalStr(str)
   } catch (error) {
@@ -101,7 +104,7 @@ export const evalExpr = (input) => {
   const seconds = str
   const times = secondsToTime(seconds)
 
-  if (isTimeStroke(trimInput)) {
+  if (isTimeStroke(parsedInput)) {
     const [h, m, s] = Object.values(times).map((t) => (t < 10 ? `0${t}` : t))
     return `${h}:${m}` + (s === '00' ? '' : `:${s}`)
   } else {
