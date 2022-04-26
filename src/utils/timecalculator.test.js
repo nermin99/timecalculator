@@ -1,12 +1,18 @@
 import {
   strip,
   evalExpr,
-  timeStrokesToSeconds,
-  timeDurationsToSeconds,
+  strokesToSeconds,
+  durationsToSeconds,
   replaceIntervals,
   evalStr,
   isTimeStroke,
 } from './timecalculator'
+
+describe('strip', () => {
+  test('should remove all whitespace from str', () => {
+    expect(strip(' 1h + 2h ')).toBe('1h+2h')
+  })
+})
 
 test('testing >', () => {
   expect(evalExpr('08:00 > 09:30')).toBe('1 hour 30 minutes')
@@ -33,7 +39,7 @@ describe('replaceIntervals', () => {
     expect(replaceIntervals('01:00>02:00')).toBe('3600')
   })
   test('interval complex', () => {
-    expect(replaceIntervals(strip('00:00 > 01:00 + 02:00 > 03:00'))).toBe('3600+3600')
+    expect(replaceIntervals(strip('00:00 > 01:00 + 01:00 > 03:00'))).toBe('3600+7200')
   })
 })
 
@@ -61,13 +67,13 @@ describe('isTimeStroke', () => {
 
 describe('timeStrokesToSeconds', () => {
   test('simple', () => {
-    expect(timeStrokesToSeconds('01:30:40')).toBe('5440')
+    expect(strokesToSeconds('01:30:40')).toBe('5440')
   })
 })
 
 describe('timeDurationsToSeconds', () => {
   test('simple', () => {
-    expect(timeDurationsToSeconds('1h30m20s')).toBe('5420')
+    expect(durationsToSeconds('1h30m20s')).toBe('5420')
   })
   test('simple addition', () => {
     expect(evalExpr('1h + 1h30m')).toBe('2 hours 30 minutes')

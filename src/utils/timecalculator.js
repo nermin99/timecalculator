@@ -1,52 +1,52 @@
-const operations = new Map([
-  ['+', (op1, op2) => op1 + op2],
-  ['-', (op1, op2) => op1 - op2],
-  ['>', (op1, op2) => op2 - op1],
-])
+/* Remove all whitespace from string */
+export const strip = (str) => str.replace(/\s+/g, '')
 
-/**
- * Converts time strokes (from midnight) to seconds.
- * '01:30:40' ---> '5440'
- */
-export const timeStrokesToSeconds = (str) => {
-  const re = /(\d{2}):(\d{2}):?(\d{2})?/g
-
-  const matches = str.matchAll(re)
-  for (const [match, hours, minutes, seconds = 0] of matches) {
-    str = str.replace(match, Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds))
-  }
-  return str
+export const strTimeToSeconds = (hours, minutes, seconds) => {
+  return Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds)
 }
 
 /**
- * Converts explicit time durations to seconds.
- * '1h30m20s' ---> '5420'
+ * Replaces time intervals with the time duration in seconds.
+ * '01:00>02:00' --> '3600'
  */
-export const timeDurationsToSeconds = (str) => {
-  const rx = /(\d+h)?(\d+m)?(\d+s)?/g
-  const matches = str.matchAll(rx)
-
-  for (const [match, hours = 0, minutes = 0, seconds = 0] of matches) {
-    if (match === '') continue
-
-    str = str.replace(
-      match,
-      parseInt(hours) * 3600 + parseInt(minutes) * 60 + parseInt(seconds)
-    )
-  }
-  return str
-}
-
-// '01:00>02:00' --> '3600'
 export const replaceIntervals = (str) => {
   const reStroke = '(\\d{2}:\\d{2}(?::\\d{2})?)'
   const reInterval = `${reStroke}\\>${reStroke}`
 
   const matches = str.matchAll(reInterval)
   for (const [match, stroke1, stroke2] of matches) {
-    const t1 = timeStrokesToSeconds(stroke1)
-    const t2 = timeStrokesToSeconds(stroke2)
+    const t1 = strokesToSeconds(stroke1)
+    const t2 = strokesToSeconds(stroke2)
     str = str.replace(match, Number(t2) - Number(t1))
+  }
+  return str
+}
+
+/**
+ * Converts time strokes (from midnight) to seconds.
+ * '01:30:40' --> '5440'
+ */
+export const strokesToSeconds = (str) => {
+  const re = /(\d{2}):(\d{2}):?(\d{2})?/g
+
+  const matches = str.matchAll(re)
+  for (const [match, hours, minutes, seconds = 0] of matches) {
+    str = str.replace(match, strTimeToSeconds(hours, minutes, seconds))
+  }
+  return str
+}
+
+/**
+ * Converts explicit time durations to seconds.
+ * '1h30m20s' --> '5420'
+ */
+export const durationsToSeconds = (str) => {
+  // https://stackoverflow.com/questions/72016685/matching-hour-minute-second-hms-duration-string
+  const re = /\b(?=\w)(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?\b(?!\w)/g
+
+  const matches = str.matchAll(re)
+  for (const [match, hours = 0, minutes = 0, seconds = 0] of matches) {
+    str = str.replace(match, strTimeToSeconds(hours, minutes, seconds))
   }
   return str
 }
@@ -83,18 +83,15 @@ export const isTimeStroke = (str) => {
   return reFront.test(str) || reBack.test(str)
 }
 
-/* Remove all whitespace from string */
-export const strip = (str) => str.replace(/\s+/g, '')
-
 /**
  * Main function which takes the user input.
  */
 export const evalExpr = (input) => {
-  const trimInput = strip(input)
+  const strippedInput = strip(input)
 
-  const parsedInput = replaceIntervals(trimInput)
-  let str = timeStrokesToSeconds(parsedInput)
-  str = timeDurationsToSeconds(str)
+  const parsedInput = replaceIntervals(strippedInput)
+  let str = strokesToSeconds(parsedInput)
+  str = durationsToSeconds(str)
   try {
     str = evalStr(str)
   } catch (error) {
