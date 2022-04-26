@@ -80,11 +80,14 @@ export const isTimeStroke = (str) => {
   return reFront.test(str) || reBack.test(str)
 }
 
+/* Remove all whitespace */
+export const trim = (str) => str.replace(/\s+/g, '')
+
 /**
  * Main function which takes the user input.
  */
 export const evalExpr = (input) => {
-  const trimInput = input.replace(/\s+/g, '') // remove all whitespace
+  const trimInput = trim(input)
 
   let str = timeStrokesToSeconds(trimInput)
   str = timeDurationsToSeconds(str)
