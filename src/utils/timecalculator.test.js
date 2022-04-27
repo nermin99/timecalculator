@@ -9,7 +9,8 @@ import {
   intervalsToSeconds,
   evalStr,
   isTimeStroke,
-  durationToStr,
+  durationToHMS,
+  durationToOutput,
 } from './timecalculator'
 
 test('testing >', () => {
@@ -110,9 +111,15 @@ describe('durationsToSeconds', () => {
   })
 })
 
-describe('durationToStr', () => {
+describe('durationToHMS', () => {
   test('should be proper string', () => {
-    expect(durationToStr({ h: 1, m: 0, s: 20 })).toBe('1 hour 20 seconds')
+    expect(durationToHMS({ h: 1, m: 0, s: 20 })).toBe('1h20s')
+  })
+})
+
+describe('durationToOutput', () => {
+  test('should be proper string', () => {
+    expect(durationToOutput({ h: 1, m: 0, s: 20 })).toBe('1 hour 20 seconds')
   })
 })
 

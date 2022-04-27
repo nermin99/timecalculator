@@ -110,22 +110,29 @@ const evaluateParentheses = (input) => {
 } */
 
 /**
- * Convert time duration to representable string.
+ * Convert time duration to string on format hms.
+ * { h: 1, m: 0, s: 20 } --> '1h20s'
+ */
+export const durationToHMS = (durationObj) => {
+  const res = Object.entries(durationObj)
+    .filter(([, val]) => val !== 0)
+    .reduce((acc, [unit, val]) => `${acc}${val}${unit}`, '')
+  return res
+}
+
+/**
+ * Convert time duration to representable output string.
  * { h: 1, m: 0, s: 20 } --> '1 hour 20 seconds'
  */
-export const durationToStr = (durationObj) => {
+export const durationToOutput = (durationObj) => {
   const units = {
     h: 'hour',
     m: 'minute',
     s: 'second',
   }
   const str = Object.entries(durationObj)
-    .reduce((acc, [unit, val]) => {
-      if (val !== 0) {
-        acc = `${acc} ${val} ${units[unit]}${val === 1 ? '' : 's'}`
-      }
-      return acc
-    }, '')
+    .filter(([, val]) => val !== 0)
+    .reduce((acc, [unit, val]) => `${acc} ${val} ${units[unit]}${val === 1 ? '' : 's'}`, '')
     .trim()
   return str === '' ? '0 hours 0 minutes 0 seconds' : str
 }
@@ -156,6 +163,6 @@ export const evalExpr = (input) => {
   if (isTimeStroke(parsedInput)) {
     return secondsToStroke(seconds)
   } else {
-    return durationToStr(times)
+    return durationToOutput(times)
   }
 }
