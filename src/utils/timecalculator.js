@@ -16,9 +16,9 @@ export const strTimeToSeconds = (hours, minutes, seconds) => {
  * Get the number of hours, minutes and seconds from the total seconds.
  */
 export const secondsToDurations = (seconds = 0) => ({
-  hour: Math.floor(seconds / 3600) % 24,
-  minute: Math.floor(seconds / 60) % 60,
-  second: seconds % 60,
+  h: Math.floor(seconds / 3600) % 24,
+  m: Math.floor(seconds / 60) % 60,
+  s: seconds % 60,
 })
 
 /**
@@ -50,7 +50,7 @@ export const intervalsToSeconds = (str) => {
 
 /**
  * Converts time strokes (from midnight) to seconds.
- * '01:30:40' --> '5440'
+ * '01:30' --> '5400'
  */
 export const strokesToSeconds = (str) => {
   const re = /(\d{2}):(\d{2}):?(\d{2})?/g
@@ -110,6 +110,27 @@ const evaluateParentheses = (input) => {
 } */
 
 /**
+ * Convert time duration to representable string.
+ * { h: 1, m: 0, s: 20 } --> '1 hour 20 seconds'
+ */
+export const durationToStr = (durationObj) => {
+  const units = {
+    h: 'hour',
+    m: 'minute',
+    s: 'second',
+  }
+  const str = Object.entries(durationObj)
+    .reduce((acc, [unit, val]) => {
+      if (val !== 0) {
+        acc = `${acc} ${val} ${units[unit]}${val === 1 ? '' : 's'}`
+      }
+      return acc
+    }, '')
+    .trim()
+  return str === '' ? '0 hours 0 minutes 0 seconds' : str
+}
+
+/**
  * Main function which takes the user input.
  */
 export const evalExpr = (input) => {
@@ -135,10 +156,6 @@ export const evalExpr = (input) => {
   if (isTimeStroke(parsedInput)) {
     return secondsToStroke(seconds)
   } else {
-    const [h, m, s] = Object.entries(times).map(([unit, val]) =>
-      val === 0 ? '' : `${val} ${unit}${val === 1 ? '' : 's'}`
-    )
-    const result = [h, m, s].filter((str) => str !== '').join(' ')
-    return result === '' ? '0 hours 0 minutes 0 seconds' : result
+    return durationToStr(times)
   }
 }

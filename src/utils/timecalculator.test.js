@@ -9,6 +9,7 @@ import {
   intervalsToSeconds,
   evalStr,
   isTimeStroke,
+  durationToStr,
 } from './timecalculator'
 
 test('testing >', () => {
@@ -45,7 +46,7 @@ describe('strTimeToSeconds', () => {
 
 describe('secondsToDurations', () => {
   test('should return the proper time', () => {
-    expect(secondsToDurations(3670)).toEqual({ hour: 1, minute: 1, second: 10 })
+    expect(secondsToDurations(3670)).toEqual({ h: 1, m: 1, s: 10 })
   })
 })
 
@@ -106,6 +107,12 @@ describe('durationsToSeconds', () => {
   })
   test('more complex', () => {
     expect(evalExpr('00:00 > 01:00 + 1h30m')).toBe('2 hours 30 minutes')
+  })
+})
+
+describe('durationToStr', () => {
+  test('should be proper string', () => {
+    expect(durationToStr({ h: 1, m: 0, s: 20 })).toBe('1 hour 20 seconds')
   })
 })
 
