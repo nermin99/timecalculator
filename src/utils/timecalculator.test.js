@@ -1,18 +1,15 @@
 import {
   strip,
+  strTimeToSeconds,
+  secondsToDurations,
+  secondsToStroke,
   evalExpr,
   strokesToSeconds,
   durationsToSeconds,
-  replaceIntervals,
+  intervalsToSeconds,
   evalStr,
   isTimeStroke,
 } from './timecalculator'
-
-describe('strip', () => {
-  test('should remove all whitespace from str', () => {
-    expect(strip(' 1h + 2h ')).toBe('1h+2h')
-  })
-})
 
 test('testing >', () => {
   expect(evalExpr('08:00 > 09:30')).toBe('1 hour 30 minutes')
@@ -30,21 +27,50 @@ test('should wrap around 24h', () => {
   expect(evalExpr('23:00 + 2h')).toBe('01:00')
 })
 
-test('the priority of operators', () => {
-  expect(evalExpr('01:00 > 02:00 + 02:00 > 03:00')).toBe('2 hours')
+describe('strip', () => {
+  test('should remove all whitespace from str', () => {
+    expect(strip(' 1h + 2h ')).toBe('1h+2h')
+  })
 })
 
-describe('replaceIntervals', () => {
+test('should work with all possible characters', () => {
+  expect(evalExpr('1h30m20s + 01:00 > 02:30:40 - (1h30m-2h)')).toBe('3 hours 31 minutes')
+})
+
+describe('strTimeToSeconds', () => {
+  test('should work properly', () => {
+    expect(strTimeToSeconds(1, '1', '10')).toBe(3670)
+  })
+})
+
+describe('secondsToDurations', () => {
+  test('should return the proper time', () => {
+    expect(secondsToDurations(3670)).toEqual({ hour: 1, minute: 1, second: 10 })
+  })
+})
+
+describe('secondsToStroke', () => {
+  test('HH:MM', () => {
+    expect(secondsToStroke(3660)).toBe('01:01')
+  })
+  test('HH:MM:SS', () => {
+    expect(secondsToStroke(3670)).toBe('01:01:10')
+  })
+})
+
+describe('intervalsToSeconds', () => {
   test('replacing intervals properly', () => {
-    expect(replaceIntervals('01:00>02:00')).toBe('3600')
+    expect(intervalsToSeconds('01:00>02:00')).toBe('3600')
   })
   test('interval complex', () => {
-    expect(replaceIntervals(strip('00:00 > 01:00 + 01:00 > 03:00'))).toBe('3600+7200')
+    expect(intervalsToSeconds(strip('00:00 > 01:00 + 01:00 > 03:00'))).toBe('3600+7200')
   })
 })
 
-test('should evaluate string of mathematical expressions', () => {
-  expect(evalStr('3 + 5 - 7')).toBe(1)
+describe('evalStr', () => {
+  test('should evaluate mathematical expression', () => {
+    expect(evalStr('3 + 5 - (7 - 11)')).toBe(12)
+  })
 })
 
 describe('isTimeStroke', () => {
@@ -65,13 +91,13 @@ describe('isTimeStroke', () => {
   })
 })
 
-describe('timeStrokesToSeconds', () => {
+describe('strokesToSeconds', () => {
   test('simple', () => {
-    expect(strokesToSeconds('01:30:40')).toBe('5440')
+    expect(strokesToSeconds('01:00:40')).toBe('3640')
   })
 })
 
-describe('timeDurationsToSeconds', () => {
+describe('durationsToSeconds', () => {
   test('simple', () => {
     expect(durationsToSeconds('1h30m20s')).toBe('5420')
   })
@@ -83,6 +109,11 @@ describe('timeDurationsToSeconds', () => {
   })
 })
 
-test('should work with all possible characters', () => {
-  expect(evalExpr('1h30m20s + 01:00 > 02:30:40 - (1h30m-2h)')).toBe('3 hours 31 minutes')
+describe('the priority of operators', () => {
+  test('priority without parentheses', () => {
+    expect(evalExpr('01:00 > 02:00 + 02:00 > 03:00')).toBe('2 hours')
+  })
+  // test('priority with parentheses', () => {
+  //   expect(evalExpr('(1h + 00:00) > (01:00 + 2h)')).toBe('3 hours')
+  // })
 })

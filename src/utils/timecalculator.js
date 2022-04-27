@@ -4,15 +4,39 @@ const reStroke = '\\d{2}:\\d{2}(?::\\d{2})?'
 /* Remove all whitespace from string */
 export const strip = (str) => str.replace(/\s+/g, '')
 
+/**
+ * Get total number of seconds from hours, minutes, and seconds.
+ * ('1', '1', 0) --> 3660
+ */
 export const strTimeToSeconds = (hours, minutes, seconds) => {
   return Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds)
+}
+
+/**
+ * Get the number of hours, minutes and seconds from the total seconds.
+ */
+export const secondsToDurations = (seconds = 0) => ({
+  hour: Math.floor(seconds / 3600) % 24,
+  minute: Math.floor(seconds / 60) % 60,
+  second: seconds % 60,
+})
+
+/**
+ * Converts total seconds (from midnight) to time stroke on the form
+ * HH:MM or HH:MM:SS.
+ * 3660 --> '01:01'
+ */
+export const secondsToStroke = (seconds) => {
+  const hhmmss = new Date(seconds * 1000).toISOString().slice(11, 19)
+  const hhmm = hhmmss.slice(0, -3)
+  return hhmmss.slice(-2) === '00' ? hhmm : hhmmss
 }
 
 /**
  * Replaces time intervals with the time duration in seconds.
  * '01:00>02:00' --> '3600'
  */
-export const replaceIntervals = (str) => {
+export const intervalsToSeconds = (str) => {
   const reInterval = `(${reStroke})\\>(${reStroke})`
 
   const matches = str.matchAll(reInterval)
@@ -53,26 +77,6 @@ export const durationsToSeconds = (str) => {
   return str
 }
 
-// '3600+3600' --> 7200
-// /[hms\d\+\-\>\:\(\)]/g
-export const evalStr = (str) => Function(`'use strict'; return (${str})`)()
-
-/**
- * Get the number of hours, minutes and seconds
- * from the total seconds.
- */
-const secondsToTime = (seconds) => {
-  const time = seconds
-  let rem = time
-
-  const times = {
-    hour: Math.floor(rem / (60 * 60)) % 24,
-    minute: Math.floor(time / 60) % 60,
-    second: time % 60,
-  }
-  return times
-}
-
 /**
  * Check whether time stroke or elapsed time is calculated.
  * Is a time stroke if any time duration is added/subtracted to any time stroke.
@@ -84,27 +88,52 @@ export const isTimeStroke = (str) => {
   return reFront.test(str) || reBack.test(str)
 }
 
+// '3600+3600' --> 7200
+// /[hms\d\+\-\>\:\(\)]/g
+export const evalStr = (str) => Function(`'use strict'; return (${str})`)()
+
+/* export const evaluate = (str) => {
+  const strippedInput = strip(str)
+  const parsedInput = intervalsToSeconds(strippedInput)
+  str = strokesToSeconds(parsedInput)
+  str = durationsToSeconds(str)
+}
+
+const evaluateParentheses = (input) => {
+  const re = /\([^(]*?\)/g
+
+  const match = input.match(re)?.[0]
+  if (!match) return input
+
+  const res = evaluate(durationsToSeconds(strokesToSeconds(match)))
+  return evaluateParentheses(input.replace(match, res))
+} */
+
 /**
  * Main function which takes the user input.
  */
 export const evalExpr = (input) => {
   const strippedInput = strip(input)
-
-  const parsedInput = replaceIntervals(strippedInput)
+  // console.log(strippedInput)
+  const parsedInput = intervalsToSeconds(strippedInput)
+  // console.log('intervalsToSeconds', parsedInput)
   let str = strokesToSeconds(parsedInput)
+  // console.log('strokesToSeconds', str)
   str = durationsToSeconds(str)
+  // console.log('durationsToSeconds', str)
   try {
     str = evalStr(str)
+    // console.log('evalStr', str)
   } catch (error) {
+    // console.error(error)
     str = 0
   }
 
   const seconds = str
-  const times = secondsToTime(seconds)
+  const times = secondsToDurations(seconds)
 
   if (isTimeStroke(parsedInput)) {
-    const [h, m, s] = Object.values(times).map((t) => (t < 10 ? `0${t}` : t))
-    return `${h}:${m}` + (s === '00' ? '' : `:${s}`)
+    return secondsToStroke(seconds)
   } else {
     const [h, m, s] = Object.entries(times).map(([unit, val]) =>
       val === 0 ? '' : `${val} ${unit}${val === 1 ? '' : 's'}`
