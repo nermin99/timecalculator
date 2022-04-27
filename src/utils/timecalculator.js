@@ -1,3 +1,6 @@
+// Matches time strokes on the form HH:MM and HH:MM:SS
+const reStroke = '\\d{2}:\\d{2}(?::\\d{2})?'
+
 /* Remove all whitespace from string */
 export const strip = (str) => str.replace(/\s+/g, '')
 
@@ -10,8 +13,7 @@ export const strTimeToSeconds = (hours, minutes, seconds) => {
  * '01:00>02:00' --> '3600'
  */
 export const replaceIntervals = (str) => {
-  const reStroke = '(\\d{2}:\\d{2}(?::\\d{2})?)'
-  const reInterval = `${reStroke}\\>${reStroke}`
+  const reInterval = `(${reStroke})\\>(${reStroke})`
 
   const matches = str.matchAll(reInterval)
   for (const [match, stroke1, stroke2] of matches) {
@@ -77,9 +79,8 @@ const secondsToTime = (seconds) => {
  * Regex matches e.g '18:30+1h' but not e.g '1h-30m' or '12:00>13:00'.
  */
 export const isTimeStroke = (str) => {
-  const reBase = '(\\d{2}):(\\d{2}):?(\\d{2})?'
-  const reFront = new RegExp(`\\d+[hms][+-]${reBase}`)
-  const reBack = new RegExp(`${reBase}[+-]\\d+[hms]`)
+  const reFront = new RegExp(`\\d+[hms][+-]${reStroke}`)
+  const reBack = new RegExp(`${reStroke}[+-]\\d+[hms]`)
   return reFront.test(str) || reBack.test(str)
 }
 
