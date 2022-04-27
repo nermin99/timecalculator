@@ -1,12 +1,12 @@
 import {
   strip,
   strTimeToSeconds,
-  secondsToDurations,
+  secondsToDuration,
   secondsToStroke,
   evalExpr,
-  strokesToSeconds,
-  durationsToSeconds,
-  intervalsToSeconds,
+  strokesToStrSeconds,
+  durationToStrSeconds,
+  intervalsToStrSeconds,
   evalStr,
   isTimeStroke,
   durationToHMS,
@@ -45,9 +45,9 @@ describe('strTimeToSeconds', () => {
   })
 })
 
-describe('secondsToDurations', () => {
+describe('secondsToDuration', () => {
   test('should return the proper time', () => {
-    expect(secondsToDurations(3670)).toEqual({ h: 1, m: 1, s: 10 })
+    expect(secondsToDuration(3670)).toEqual({ h: 1, m: 1, s: 10 })
   })
 })
 
@@ -60,12 +60,12 @@ describe('secondsToStroke', () => {
   })
 })
 
-describe('intervalsToSeconds', () => {
+describe('intervalsToStrSeconds', () => {
   test('replacing intervals properly', () => {
-    expect(intervalsToSeconds('01:00>02:00')).toBe('3600')
+    expect(intervalsToStrSeconds('01:00>02:00')).toBe('3600')
   })
   test('interval complex', () => {
-    expect(intervalsToSeconds(strip('00:00 > 01:00 + 01:00 > 03:00'))).toBe('3600+7200')
+    expect(intervalsToStrSeconds(strip('00:00 > 01:00 + 01:00 > 03:00'))).toBe('3600+7200')
   })
 })
 
@@ -93,15 +93,15 @@ describe('isTimeStroke', () => {
   })
 })
 
-describe('strokesToSeconds', () => {
+describe('strokesToStrSeconds', () => {
   test('simple', () => {
-    expect(strokesToSeconds('01:00:40')).toBe('3640')
+    expect(strokesToStrSeconds('01:00:40')).toBe('3640')
   })
 })
 
-describe('durationsToSeconds', () => {
+describe('durationToStrSeconds', () => {
   test('simple', () => {
-    expect(durationsToSeconds('1h30m20s')).toBe('5420')
+    expect(durationToStrSeconds('1h30m20s')).toBe('5420')
   })
   test('simple addition', () => {
     expect(evalExpr('1h + 1h30m')).toBe('2 hours 30 minutes')
