@@ -28,7 +28,7 @@ export const secondsToDuration = (seconds = 0) => ({
  * 3660 --> '01:01'
  */
 export const secondsToStroke = (seconds) => {
-  const hhmmss = new Date(seconds * 1000).toISOString().slice(11, 19)
+  const hhmmss = new Date(Number(seconds) * 1000).toISOString().slice(11, 19)
   const hhmm = hhmmss.slice(0, -3)
   return hhmmss.slice(-2) === '00' ? hhmm : hhmmss
 }
@@ -91,23 +91,10 @@ export const isTimeStroke = (str) => {
 
 // '3600+3600' --> 7200
 // /[hms\d\+\-\>\:\(\)]/g
-export const evalStr = (str) => Function(`'use strict'; return (${str})`)()
-
-export const evaluate = (str) => {
-  const parsedInput = replaceIntervals(str)
-  str = replaceStrokes(parsedInput)
-  str = replaceDurations(str)
+export const evalStr = (str) => {
+  str = str.replaceAll('--', '- -') // don't interpret as decrement operator
+  return Function(`'use strict'; return (${str})`)()
 }
-/*
-const evaluateParentheses = (input) => {
-  const re = /\([^(]*?\)/g
-
-  const match = input.match(re)?.[0]
-  if (!match) return input
-
-  const res = evaluate(replaceDurations(replaceStrokes(match)))
-  return evaluateParentheses(input.replace(match, res))
-} */
 
 /**
  * Convert time duration to string on format hms.
@@ -137,24 +124,42 @@ export const durationToOutput = (durationObj) => {
   return str === '' ? '0 hours 0 minutes 0 seconds' : str
 }
 
+export const evaluate = (str) => {
+  const str1 = replaceIntervals(str)
+  const str2 = replaceStrokes(str1)
+  const str3 = replaceDurations(str2)
+  const str4 = evalStr(str3)
+  if (isTimeStroke(str1)) {
+    return secondsToStroke(str4)
+  }
+  return str4
+}
+
+export const evaluateParentheses = (input) => {
+  const re = /\([^(]*?\)/g
+
+  const match = input.match(re)?.[0]
+  if (!match) return input
+
+  const res = evaluate(match)
+  return evaluateParentheses(input.replace(match, res))
+}
+
 /**
  * Main function which takes the user input.
  */
 export const evalExpr = (input) => {
   const strippedInput = strip(input)
-  // console.log(strippedInput)
-  const parsedInput = replaceIntervals(strippedInput)
-  // console.log('replaceIntervals', parsedInput)
-  let str = replaceStrokes(parsedInput)
-  // console.log('replaceStrokes', str)
-  str = replaceDurations(str)
-  // console.log('replaceDurations', str)
+  const preparedInput = evaluateParentheses(strippedInput)
+  const parsedInput = replaceIntervals(preparedInput)
+  const strokesReplaced = replaceStrokes(parsedInput)
+  const durationsReplaced = replaceDurations(strokesReplaced)
+
   let seconds
   try {
-    seconds = evalStr(str)
-    // console.log('evalStr', str)
+    seconds = evalStr(durationsReplaced)
   } catch (error) {
-    // console.error(error)
+    console.error(error)
     seconds = 0
   }
 

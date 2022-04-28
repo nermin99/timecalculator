@@ -127,7 +127,12 @@ describe('the priority of operators', () => {
   test('priority without parentheses', () => {
     expect(evalExpr('01:00 > 02:00 + 02:00 > 03:00')).toBe('2 hours')
   })
-  // test('priority with parentheses', () => {
-  //   expect(evalExpr('(1h + 00:00) > (01:00 + 2h)')).toBe('3 hours')
+  test('priority with parentheses', () => {
+    expect(evalExpr('(1h + 01:00) > (02:00 + 2h)')).toBe('2 hours')
+  })
+  // test('nested parentheses', () => {
+  //   expect(evalExpr('(00:00 + (01:00>02:00)) > (03:00 + (1h-2h30m))')).toBe(
+  //     '1 hour  30 minutes'
+  //   )
   // })
 })
