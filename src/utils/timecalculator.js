@@ -100,9 +100,13 @@ export const isTimeStroke = (str) => {
   return reFront.test(str) || reBack.test(str)
 }
 
-// '3600+3600' --> 7200
-// /[hms\d\+\-\>\:\(\)]/g
+/**
+ * Evaluate mathematical expressions.
+ * '3600+3600' --> 7200
+ */
 export const evalStr = (str) => {
+  const reWhiteList = /[hms\d\+\-\>\:\(\)]/g
+  if (str.length !== str.match(reWhiteList).length) return 0 // only allow characters from whitelist
   str = str.replaceAll('--', '- -') // don't interpret as decrement operator
   return Function(`'use strict'; return (${str})`)()
 }

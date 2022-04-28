@@ -89,7 +89,7 @@ describe('replaceDurations', () => {
 
 describe('evalStr', () => {
   test('should evaluate mathematical expression', () => {
-    expect(evalStr('3 + 5 - (7 - 11)')).toBe(12)
+    expect(evalStr(strip('3 + 5 - (7 - 11)'))).toBe(12)
   })
 })
 
