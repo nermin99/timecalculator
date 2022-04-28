@@ -131,8 +131,6 @@ describe('the priority of operators', () => {
     expect(evalExpr('(1h + 01:00) > (02:00 + 2h)')).toBe('2 hours')
   })
   test('nested parentheses', () => {
-    expect(evalExpr('(00:00 + (01:00>02:00)) > (04:00 + (1h-2h30m))')).toBe(
-      '1 hour 30 minutes'
-    )
+    expect(evalExpr('(00:00+ (01:00>02:00)) > (04:00+ (1h-2h30m))')).toBe('1 hour 30 minutes')
   })
 })
