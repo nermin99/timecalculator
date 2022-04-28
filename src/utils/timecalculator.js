@@ -14,21 +14,21 @@ export const strTimeToSeconds = (hours, minutes, seconds) => {
 
 /**
  * Get the number of hours, minutes and seconds from the total seconds.
- * 3670 --> { h: 1, m: 1, s: 10 }
+ * 3670 --> { hour: 1, minute: 1, second: 10 }
  */
 export const secondsToDuration = (seconds = 0) => {
   const negative = seconds < 0
   if (negative) seconds = Math.abs(seconds)
 
   const obj = {
-    h: Math.floor(seconds / 3600) % 24,
-    m: Math.floor(seconds / 60) % 60,
-    s: seconds % 60,
+    hour: Math.floor(seconds / 3600) % 24,
+    minute: Math.floor(seconds / 60) % 60,
+    second: seconds % 60,
   }
   if (negative) {
-    if (obj.h !== 0) obj.h = -obj.h
-    if (obj.h === 0 && obj.m !== 0) obj.m = -obj.m
-    if (obj.h === 0 && obj.m === 0 && obj.s !== 0) obj.s = -obj.s
+    if (obj.hour !== 0) obj.hour = -obj.hour
+    if (obj.hour === 0 && obj.minute !== 0) obj.minute = -obj.minute
+    if (obj.hour === 0 && obj.minute === 0 && obj.second !== 0) obj.second = -obj.second
   }
   return obj
 }
@@ -109,31 +109,23 @@ export const evalStr = (str) => {
 
 /**
  * Convert time duration to string on format hms.
- * { h: 1, m: 0, s: 20 } --> '1h20s'
+ * { hour: 1, minute: 0, second: 20 } --> '1h20s'
  */
 export const durationToHMS = (durationObj) => {
   const res = Object.entries(durationObj)
     .filter(([, val]) => val !== 0)
-    .reduce((acc, [unit, val]) => `${acc}${val}${unit}`, '')
+    .reduce((acc, [unit, val]) => `${acc}${val}${unit[0]}`, '')
   return res
 }
 
 /**
  * Convert time duration to representable output string.
- * { h: 1, m: 0, s: 20 } --> '1 hour 20 seconds'
+ * { hour: 1, minute: 0, second: 20 } --> '1 hour 20 seconds'
  */
 export const durationToOutput = (durationObj) => {
-  const units = {
-    h: 'hour',
-    m: 'minute',
-    s: 'second',
-  }
   const str = Object.entries(durationObj)
     .filter(([, val]) => val !== 0)
-    .reduce(
-      (acc, [unit, val]) => `${acc} ${val} ${units[unit]}${Math.abs(val) === 1 ? '' : 's'}`,
-      ''
-    )
+    .reduce((acc, [unit, val]) => `${acc} ${val} ${unit}${Math.abs(val) === 1 ? '' : 's'}`, '')
     .trim()
   return str === '' ? '0 hours 0 minutes 0 seconds' : str
 }

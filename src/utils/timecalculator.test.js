@@ -47,7 +47,7 @@ describe('strTimeToSeconds', () => {
 
 describe('secondsToDuration', () => {
   test('should return the proper time', () => {
-    expect(secondsToDuration(5400)).toEqual({ h: 1, m: 30, s: 0 })
+    expect(secondsToDuration(5400)).toEqual({ hour: 1, minute: 30, second: 0 })
   })
 })
 
@@ -113,13 +113,13 @@ describe('isTimeStroke', () => {
 
 describe('durationToHMS', () => {
   test('should be proper string', () => {
-    expect(durationToHMS({ h: 1, m: 0, s: 20 })).toBe('1h20s')
+    expect(durationToHMS({ hour: 1, minute: 0, second: 20 })).toBe('1h20s')
   })
 })
 
 describe('durationToOutput', () => {
   test('should be proper string', () => {
-    expect(durationToOutput({ h: 1, m: 0, s: 20 })).toBe('1 hour 20 seconds')
+    expect(durationToOutput({ hour: 1, minute: 0, second: 20 })).toBe('1 hour 20 seconds')
   })
 })
 
