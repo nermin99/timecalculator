@@ -14,3 +14,9 @@ export function debounce(fn, delay) {
     }, delay)
   }
 }
+
+/**
+ * Modulo function
+ * a % n
+ */
+export const mod = (a, n) => ((a % n) + n) % n
