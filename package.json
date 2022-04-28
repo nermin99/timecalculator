@@ -32,15 +32,6 @@
     "gh-pages": "^3.2.3",
     "prettier": "^2.3.2"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "rules": {
-      "no-new-func": "off"
-    }
-  },
   "browserslist": {
     "production": [
       ">0.2%",
