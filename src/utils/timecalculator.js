@@ -37,13 +37,13 @@ export const secondsToStroke = (seconds) => {
  * Replaces time intervals with the time duration in seconds.
  * '01:00>02:00' --> '3600'
  */
-export const intervalsToStrSeconds = (str) => {
+export const replaceIntervals = (str) => {
   const reInterval = `(${reStroke})\\>(${reStroke})`
 
   const matches = str.matchAll(reInterval)
   for (const [match, stroke1, stroke2] of matches) {
-    const t1 = strokesToStrSeconds(stroke1)
-    const t2 = strokesToStrSeconds(stroke2)
+    const t1 = replaceStrokes(stroke1)
+    const t2 = replaceStrokes(stroke2)
     str = str.replace(match, Number(t2) - Number(t1))
   }
   return str
@@ -53,7 +53,7 @@ export const intervalsToStrSeconds = (str) => {
  * Converts time strokes (from midnight) to seconds.
  * '01:30' --> '5400'
  */
-export const strokesToStrSeconds = (str) => {
+export const replaceStrokes = (str) => {
   const re = /(\d{2}):(\d{2}):?(\d{2})?/g
 
   const matches = str.matchAll(re)
@@ -67,7 +67,7 @@ export const strokesToStrSeconds = (str) => {
  * Converts explicit time durations to seconds.
  * '1h30m20s' --> '5420'
  */
-export const durationToStrSeconds = (str) => {
+export const replaceDurations = (str) => {
   // https://stackoverflow.com/questions/72016685/matching-hour-minute-second-hms-duration-string
   const re = /\b(?=\w)(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?\b(?!\w)/g
 
@@ -93,20 +93,19 @@ export const isTimeStroke = (str) => {
 // /[hms\d\+\-\>\:\(\)]/g
 export const evalStr = (str) => Function(`'use strict'; return (${str})`)()
 
-/* export const evaluate = (str) => {
-  const strippedInput = strip(str)
-  const parsedInput = intervalsToStrSeconds(strippedInput)
-  str = strokesToStrSeconds(parsedInput)
-  str = durationToStrSeconds(str)
+export const evaluate = (str) => {
+  const parsedInput = replaceIntervals(str)
+  str = replaceStrokes(parsedInput)
+  str = replaceDurations(str)
 }
-
+/*
 const evaluateParentheses = (input) => {
   const re = /\([^(]*?\)/g
 
   const match = input.match(re)?.[0]
   if (!match) return input
 
-  const res = evaluate(durationToStrSeconds(strokesToStrSeconds(match)))
+  const res = evaluate(replaceDurations(replaceStrokes(match)))
   return evaluateParentheses(input.replace(match, res))
 } */
 
@@ -144,12 +143,12 @@ export const durationToOutput = (durationObj) => {
 export const evalExpr = (input) => {
   const strippedInput = strip(input)
   // console.log(strippedInput)
-  const parsedInput = intervalsToStrSeconds(strippedInput)
-  // console.log('intervalsToStrSeconds', parsedInput)
-  let str = strokesToStrSeconds(parsedInput)
-  // console.log('strokesToStrSeconds', str)
-  str = durationToStrSeconds(str)
-  // console.log('durationToStrSeconds', str)
+  const parsedInput = replaceIntervals(strippedInput)
+  // console.log('replaceIntervals', parsedInput)
+  let str = replaceStrokes(parsedInput)
+  // console.log('replaceStrokes', str)
+  str = replaceDurations(str)
+  // console.log('replaceDurations', str)
   let seconds
   try {
     seconds = evalStr(str)
