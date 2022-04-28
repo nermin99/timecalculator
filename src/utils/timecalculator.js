@@ -16,11 +16,22 @@ export const strTimeToSeconds = (hours, minutes, seconds) => {
  * Get the number of hours, minutes and seconds from the total seconds.
  * 3670 --> { h: 1, m: 1, s: 10 }
  */
-export const secondsToDuration = (seconds = 0) => ({
-  h: Math.floor(seconds / 3600) % 24,
-  m: Math.floor(seconds / 60) % 60,
-  s: seconds % 60,
-})
+export const secondsToDuration = (seconds = 0) => {
+  const negative = seconds < 0
+  if (negative) seconds = Math.abs(seconds)
+
+  const obj = {
+    h: Math.floor(seconds / 3600) % 24,
+    m: Math.floor(seconds / 60) % 60,
+    s: seconds % 60,
+  }
+  if (negative) {
+    if (obj.h !== 0) obj.h = -obj.h
+    if (obj.h === 0 && obj.m !== 0) obj.m = -obj.m
+    if (obj.h === 0 && obj.m === 0 && obj.s !== 0) obj.s = -obj.s
+  }
+  return obj
+}
 
 /**
  * Converts total seconds (from midnight) to time stroke on the form
@@ -84,8 +95,8 @@ export const replaceDurations = (str) => {
  * Regex matches e.g '18:30+1h' but not e.g '1h-30m' or '12:00>13:00'.
  */
 export const isTimeStroke = (str) => {
-  const reFront = new RegExp(`\\d+[hms][+-]${reStroke}`)
-  const reBack = new RegExp(`${reStroke}[+-]\\d+[hms]`)
+  const reFront = new RegExp(`\\d+[hms][+-]+${reStroke}`)
+  const reBack = new RegExp(`${reStroke}[+-]+\\d+[hms]`)
   return reFront.test(str) || reBack.test(str)
 }
 
@@ -119,7 +130,10 @@ export const durationToOutput = (durationObj) => {
   }
   const str = Object.entries(durationObj)
     .filter(([, val]) => val !== 0)
-    .reduce((acc, [unit, val]) => `${acc} ${val} ${units[unit]}${val === 1 ? '' : 's'}`, '')
+    .reduce(
+      (acc, [unit, val]) => `${acc} ${val} ${units[unit]}${Math.abs(val) === 1 ? '' : 's'}`,
+      ''
+    )
     .trim()
   return str === '' ? '0 hours 0 minutes 0 seconds' : str
 }
@@ -131,8 +145,9 @@ export const evaluate = (str) => {
   const str4 = evalStr(str3)
   if (isTimeStroke(str1)) {
     return secondsToStroke(str4)
+  } else {
+    return durationToHMS(secondsToDuration(str4))
   }
-  return str4
 }
 
 export const evaluateParentheses = (input) => {
@@ -166,6 +181,7 @@ export const evalExpr = (input) => {
   if (isTimeStroke(parsedInput)) {
     return secondsToStroke(seconds)
   } else {
-    return durationToOutput(secondsToDuration(seconds))
+    const duration = secondsToDuration(seconds)
+    return durationToOutput(duration)
   }
 }

@@ -21,6 +21,10 @@ test('testing +', () => {
   expect(evalExpr('08:00 + 1h30m')).toBe('09:30')
 })
 
+test('testing -', () => {
+  expect(evalExpr('1h - 2h10m')).toBe('-1 hour 10 minutes')
+})
+
 test('testing - and seconds', () => {
   expect(evalExpr('08:00 - 30m10s')).toBe('07:29:50')
 })
@@ -47,7 +51,7 @@ describe('strTimeToSeconds', () => {
 
 describe('secondsToDuration', () => {
   test('should return the proper time', () => {
-    expect(secondsToDuration(3670)).toEqual({ h: 1, m: 1, s: 10 })
+    expect(secondsToDuration(5400)).toEqual({ h: 1, m: 30, s: 0 })
   })
 })
 
@@ -130,9 +134,9 @@ describe('the priority of operators', () => {
   test('priority with parentheses', () => {
     expect(evalExpr('(1h + 01:00) > (02:00 + 2h)')).toBe('2 hours')
   })
-  // test('nested parentheses', () => {
-  //   expect(evalExpr('(00:00 + (01:00>02:00)) > (03:00 + (1h-2h30m))')).toBe(
-  //     '1 hour  30 minutes'
-  //   )
-  // })
+  test('nested parentheses', () => {
+    expect(evalExpr('(00:00 + (01:00>02:00)) > (04:00 + (1h-2h30m))')).toBe(
+      '1 hour 30 minutes'
+    )
+  })
 })
