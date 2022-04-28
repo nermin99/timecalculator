@@ -39,10 +39,6 @@ describe('strip', () => {
   })
 })
 
-test('should work with all possible characters', () => {
-  expect(evalExpr('1h30m20s + 01:00 > 02:30:40 - (1h30m-2h)')).toBe('3 hours 31 minutes')
-})
-
 describe('strTimeToSeconds', () => {
   test('should work properly', () => {
     expect(strTimeToSeconds(1, '1', '10')).toBe(3670)
