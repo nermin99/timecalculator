@@ -62,10 +62,28 @@ describe('secondsToStroke', () => {
 
 describe('replaceIntervals', () => {
   test('replacing intervals properly', () => {
-    expect(replaceIntervals('01:00>02:00')).toBe('3600')
+    expect(replaceIntervals(strip('01:00 > 02:00'))).toBe('3600')
   })
   test('interval complex', () => {
     expect(replaceIntervals(strip('00:00 > 01:00 + 01:00 > 03:00'))).toBe('3600+7200')
+  })
+})
+
+describe('replaceStrokes', () => {
+  test('simple', () => {
+    expect(replaceStrokes('01:00:40')).toBe('3640')
+  })
+})
+
+describe('replaceDurations', () => {
+  test('simple', () => {
+    expect(replaceDurations('1h30m20s')).toBe('5420')
+  })
+  test('simple addition', () => {
+    expect(evalExpr('1h + 1h30m')).toBe('2 hours 30 minutes')
+  })
+  test('more complex', () => {
+    expect(evalExpr('00:00 > 01:00 + 1h30m')).toBe('2 hours 30 minutes')
   })
 })
 
@@ -90,24 +108,6 @@ describe('isTimeStroke', () => {
   })
   test('back match', () => {
     expect(isTimeStroke(strip('08:00 + 1h30m'))).toBe(true)
-  })
-})
-
-describe('replaceStrokes', () => {
-  test('simple', () => {
-    expect(replaceStrokes('01:00:40')).toBe('3640')
-  })
-})
-
-describe('replaceDurations', () => {
-  test('simple', () => {
-    expect(replaceDurations('1h30m20s')).toBe('5420')
-  })
-  test('simple addition', () => {
-    expect(evalExpr('1h + 1h30m')).toBe('2 hours 30 minutes')
-  })
-  test('more complex', () => {
-    expect(evalExpr('00:00 > 01:00 + 1h30m')).toBe('2 hours 30 minutes')
   })
 })
 
