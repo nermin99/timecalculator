@@ -15,48 +15,6 @@ export const strTimeToSeconds = (hours, minutes, seconds) => {
 }
 
 /**
- * Convert total seconds (from midnight) to representable output string.
- * 3620 --> '1 hour 20 seconds'
- */
-export const secondsToOutput = (seconds) => {
-  const stroke = secondsToStroke(seconds)
-  const [hour, minute, second = 0] = stroke.split(':').map(Number)
-
-  let str = Object.entries({ hour, minute, second })
-    .filter(([, val]) => val !== 0)
-    .reduce((acc, [unit, val]) => `${acc} ${val} ${unit}${Math.abs(val) === 1 ? '' : 's'}`, '')
-    .trim()
-  if (seconds < 0) str = '-' + str
-  return str === '' ? '0 hours 0 minutes 0 seconds' : str
-}
-
-/**
- * Converts total seconds (from midnight) to time duration on the form hms.
- * 3620 --> '1h20s'
- */
-export const secondsToDuration = (seconds) => {
-  const re = /(?<h>\d{2}):(?<m>\d{2}):?(?<s>\d{2})?/g
-  const stroke = secondsToStroke(seconds)
-
-  const match = re.exec(stroke)
-  const str = Object.entries(match.groups)
-    .filter(([, val]) => val && val !== '00')
-    .reduce((acc, [unit, val]) => acc + Number(val) + unit, '')
-  return seconds < 0 ? '-' + str : str
-}
-
-/**
- * Converts total seconds (from midnight) to time stroke on the form HH:MM or HH:MM:SS.
- * 3660 --> '01:01'
- */
-export const secondsToStroke = (seconds) => {
-  seconds = Math.abs(Number(seconds)) // can only deal with positive numbers
-  const hhmmss = new Date(seconds * 1000).toISOString().slice(11, 19)
-  const hhmm = hhmmss.slice(0, -3)
-  return hhmmss.slice(-2) === '00' ? hhmm : hhmmss
-}
-
-/**
  * Replaces time intervals with the time duration in seconds.
  * '01:00>02:00' --> '3600'
  */
@@ -102,17 +60,6 @@ export const replaceDurations = (str) => {
 }
 
 /**
- * Check whether time stroke or elapsed time is calculated.
- * Is a time stroke if any time duration is added/subtracted to any time stroke.
- * Regex matches e.g '18:30+1h' but not e.g '1h-30m' or '12:00>13:00'.
- */
-export const isTimeStroke = (str) => {
-  const reFront = new RegExp(`\\d+[hms][+-]+${reStroke}`)
-  const reBack = new RegExp(`${reStroke}[+-]+\\d+[hms]`)
-  return reFront.test(str) || reBack.test(str)
-}
-
-/**
  * Evaluate mathematical expressions.
  * '3600+3600' --> 7200
  */
@@ -126,6 +73,59 @@ export const evalStr = (str) => {
   } catch (error) {
     return 0
   }
+}
+
+/**
+ * Check whether time stroke or elapsed time is calculated.
+ * Is a time stroke if any time duration is added/subtracted to any time stroke.
+ * Regex matches e.g '18:30+1h' but not e.g '1h-30m' or '12:00>13:00'.
+ */
+export const isTimeStroke = (str) => {
+  const reFront = new RegExp(`\\d+[hms][+-]+${reStroke}`)
+  const reBack = new RegExp(`${reStroke}[+-]+\\d+[hms]`)
+  return reFront.test(str) || reBack.test(str)
+}
+
+/**
+ * Converts total seconds (from midnight) to time stroke on the form HH:MM or HH:MM:SS.
+ * 3660 --> '01:01'
+ */
+export const secondsToStroke = (seconds) => {
+  seconds = Math.abs(Number(seconds)) // can only deal with positive numbers
+  const hhmmss = new Date(seconds * 1000).toISOString().slice(11, 19)
+  const hhmm = hhmmss.slice(0, -3)
+  return hhmmss.slice(-2) === '00' ? hhmm : hhmmss
+}
+
+/**
+ * Converts total seconds (from midnight) to time duration on the form hms.
+ * 3620 --> '1h20s'
+ */
+export const secondsToDuration = (seconds) => {
+  const re = /(?<h>\d{2}):(?<m>\d{2}):?(?<s>\d{2})?/g
+  const stroke = secondsToStroke(seconds)
+
+  const match = re.exec(stroke)
+  const str = Object.entries(match.groups)
+    .filter(([, val]) => val && val !== '00')
+    .reduce((acc, [unit, val]) => acc + Number(val) + unit, '')
+  return seconds < 0 ? '-' + str : str
+}
+
+/**
+ * Convert total seconds (from midnight) to representable output string.
+ * 3620 --> '1 hour 20 seconds'
+ */
+export const secondsToOutput = (seconds) => {
+  const stroke = secondsToStroke(seconds)
+  const [hour, minute, second = 0] = stroke.split(':').map(Number)
+
+  let str = Object.entries({ hour, minute, second })
+    .filter(([, val]) => val !== 0)
+    .reduce((acc, [unit, val]) => `${acc} ${val} ${unit}${Math.abs(val) === 1 ? '' : 's'}`, '')
+    .trim()
+  if (seconds < 0) str = '-' + str
+  return str === '' ? '0 hours 0 minutes 0 seconds' : str
 }
 
 /**
