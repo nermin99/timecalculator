@@ -15,10 +15,12 @@ export const strTimeToSeconds = (hours, minutes, seconds) => {
 export const secondsToOutput = (seconds) => {
   const stroke = secondsToStroke(seconds)
   const [hour, minute, second = 0] = stroke.split(':').map(Number)
-  const str = Object.entries({ hour, minute, second })
+
+  let str = Object.entries({ hour, minute, second })
     .filter(([, val]) => val !== 0)
     .reduce((acc, [unit, val]) => `${acc} ${val} ${unit}${Math.abs(val) === 1 ? '' : 's'}`, '')
     .trim()
+  if (seconds < 0) str = '-' + str
   return str === '' ? '0 hours 0 minutes 0 seconds' : str
 }
 
@@ -34,28 +36,7 @@ export const secondsToHMS = (seconds) => {
   const str = Object.entries(match.groups)
     .filter(([, val]) => val && val !== '00')
     .reduce((acc, [unit, val]) => acc + Number(val) + unit, '')
-  return str
-}
-
-/**
- * Get the number of hours, minutes and seconds from the total seconds.
- * 3670 --> { hour: 1, minute: 1, second: 10 }
- */
-export const secondsToDuration = (seconds = 0) => {
-  const negative = seconds < 0
-  if (negative) seconds = Math.abs(seconds)
-
-  const obj = {
-    hour: Math.floor(seconds / 3600) % 24,
-    minute: Math.floor(seconds / 60) % 60,
-    second: seconds % 60,
-  }
-  if (negative) {
-    if (obj.hour !== 0) obj.hour = -obj.hour
-    if (obj.hour === 0 && obj.minute !== 0) obj.minute = -obj.minute
-    if (obj.hour === 0 && obj.minute === 0 && obj.second !== 0) obj.second = -obj.second
-  }
-  return obj
+  return seconds < 0 ? '-' + str : str
 }
 
 /**
@@ -64,32 +45,10 @@ export const secondsToDuration = (seconds = 0) => {
  * 3660 --> '01:01'
  */
 export const secondsToStroke = (seconds) => {
-  const hhmmss = new Date(Number(seconds) * 1000).toISOString().slice(11, 19)
+  seconds = Math.abs(Number(seconds)) // can only deal with positive numbers
+  const hhmmss = new Date(seconds * 1000).toISOString().slice(11, 19)
   const hhmm = hhmmss.slice(0, -3)
   return hhmmss.slice(-2) === '00' ? hhmm : hhmmss
-}
-
-/**
- * Convert time duration to representable output string.
- * { hour: 1, minute: 0, second: 20 } --> '1 hour 20 seconds'
- */
-export const durationToOutput = (durationObj) => {
-  const str = Object.entries(durationObj)
-    .filter(([, val]) => val !== 0)
-    .reduce((acc, [unit, val]) => `${acc} ${val} ${unit}${Math.abs(val) === 1 ? '' : 's'}`, '')
-    .trim()
-  return str === '' ? '0 hours 0 minutes 0 seconds' : str
-}
-
-/**
- * Convert time duration to string on format hms.
- * { hour: 1, minute: 0, second: 20 } --> '1h20s'
- */
-export const durationToHMS = (durationObj) => {
-  const str = Object.entries(durationObj)
-    .filter(([, val]) => val !== 0)
-    .reduce((acc, [unit, val]) => `${acc}${val}${unit[0]}`, '')
-  return str
 }
 
 /**
@@ -167,7 +126,7 @@ export const evaluate = (str) => {
   if (isTimeStroke(str1)) {
     return secondsToStroke(str4)
   } else {
-    return durationToHMS(secondsToDuration(str4))
+    return secondsToHMS(str4)
   }
 }
 
@@ -202,7 +161,6 @@ export const evalExpr = (input) => {
   if (isTimeStroke(parsedInput)) {
     return secondsToStroke(seconds)
   } else {
-    const duration = secondsToDuration(seconds)
-    return durationToOutput(duration)
+    return secondsToOutput(seconds)
   }
 }

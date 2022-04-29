@@ -3,7 +3,6 @@ import {
   strTimeToSeconds,
   secondsToOutput,
   secondsToHMS,
-  secondsToDuration,
   secondsToStroke,
   evalExpr,
   replaceStrokes,
@@ -11,8 +10,6 @@ import {
   replaceIntervals,
   evalStr,
   isTimeStroke,
-  durationToHMS,
-  durationToOutput,
 } from './timecalculator'
 
 test('testing >', () => {
@@ -51,17 +48,17 @@ describe('secondsToOutput', () => {
   test('should return the proper output', () => {
     expect(secondsToOutput(3600)).toBe('1 hour')
   })
+  test('negative seconds', () => {
+    expect(secondsToOutput(-70)).toBe('-1 minute 10 seconds')
+  })
 })
 
 describe('secondsToHMS', () => {
   test('should return the proper hms', () => {
     expect(secondsToHMS(3620)).toBe('1h20s')
   })
-})
-
-describe('secondsToDuration', () => {
-  test('should return the proper time', () => {
-    expect(secondsToDuration(5400)).toEqual({ hour: 1, minute: 30, second: 0 })
+  test('negative seconds', () => {
+    expect(secondsToHMS(-3670)).toBe('-1h1m10s')
   })
 })
 
@@ -71,6 +68,9 @@ describe('secondsToStroke', () => {
   })
   test('HH:MM:SS', () => {
     expect(secondsToStroke(3670)).toBe('01:01:10')
+  })
+  test('negative seconds should be treated as positive', () => {
+    expect(secondsToStroke(-3670)).toBe('01:01:10')
   })
 })
 
@@ -122,18 +122,6 @@ describe('isTimeStroke', () => {
   })
   test('back match', () => {
     expect(isTimeStroke(strip('08:00 + 1h30m'))).toBe(true)
-  })
-})
-
-describe('durationToHMS', () => {
-  test('should be proper string', () => {
-    expect(durationToHMS({ hour: 1, minute: 0, second: 20 })).toBe('1h20s')
-  })
-})
-
-describe('durationToOutput', () => {
-  test('should be proper string', () => {
-    expect(durationToOutput({ hour: 1, minute: 0, second: 20 })).toBe('1 hour 20 seconds')
   })
 })
 
