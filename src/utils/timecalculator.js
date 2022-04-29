@@ -113,9 +113,14 @@ export const isTimeStroke = (str) => {
  */
 export const evalStr = (str) => {
   const reWhiteList = /[hms\d\+\-\>\:\(\)]/g
-  if (str.length !== str.match(reWhiteList).length) return 0 // only allow characters from whitelist
+  if (str.length !== str.match(reWhiteList)?.length) return 0 // only allow characters from whitelist
   str = str.replaceAll('--', '- -') // don't interpret as decrement operator
-  return Function(`'use strict'; return (${str})`)()
+
+  try {
+    return Function(`'use strict'; return (${str})`)()
+  } catch (error) {
+    return 0
+  }
 }
 
 export const evaluate = (str) => {
@@ -150,14 +155,7 @@ export const evalExpr = (input) => {
   const strokesReplaced = replaceStrokes(parsedInput)
   const durationsReplaced = replaceDurations(strokesReplaced)
 
-  let seconds
-  try {
-    seconds = evalStr(durationsReplaced)
-  } catch (error) {
-    console.error(error)
-    seconds = 0
-  }
-
+  const seconds = evalStr(durationsReplaced)
   if (isTimeStroke(parsedInput)) {
     return secondsToStroke(seconds)
   } else {
