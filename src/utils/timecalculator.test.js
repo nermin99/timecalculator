@@ -2,9 +2,10 @@ import {
   strip,
   strTimeToSeconds,
   secondsToOutput,
-  secondsToHMS,
+  secondsToDuration,
   secondsToStroke,
   handleInput,
+  replaceParentheses,
   replaceStrokes,
   replaceDurations,
   replaceIntervals,
@@ -53,12 +54,12 @@ describe('secondsToOutput', () => {
   })
 })
 
-describe('secondsToHMS', () => {
+describe('secondsToDuration', () => {
   test('should return the proper hms', () => {
-    expect(secondsToHMS(3620)).toBe('1h20s')
+    expect(secondsToDuration(3620)).toBe('1h20s')
   })
   test('negative seconds', () => {
-    expect(secondsToHMS(-3670)).toBe('-1h1m10s')
+    expect(secondsToDuration(-3670)).toBe('-1h1m10s')
   })
 })
 
@@ -71,6 +72,12 @@ describe('secondsToStroke', () => {
   })
   test('negative seconds should be treated as positive', () => {
     expect(secondsToStroke(-3670)).toBe('01:01:10')
+  })
+})
+
+describe('replaceParentheses', () => {
+  test('simple', () => {
+    expect(replaceParentheses(strip('(1h + 01:00) > (02:00 + 2h30s)'))).toBe('02:00>04:00:30')
   })
 })
 

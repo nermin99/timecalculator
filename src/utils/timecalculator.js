@@ -1,7 +1,9 @@
 // Matches time strokes on the form HH:MM and HH:MM:SS
 const reStroke = '\\d{2}:\\d{2}(?::\\d{2})?'
 
-/* Remove all whitespace from string */
+/**
+ * Remove all whitespace from string.
+ */
 export const strip = (str) => str.replace(/\s+/g, '')
 
 /**
@@ -32,7 +34,7 @@ export const secondsToOutput = (seconds) => {
  * Converts total seconds (from midnight) to time duration on the form hms.
  * 3620 --> '1h20s'
  */
-export const secondsToHMS = (seconds) => {
+export const secondsToDuration = (seconds) => {
   const re = /(?<h>\d{2}):(?<m>\d{2}):?(?<s>\d{2})?/g
   const stroke = secondsToStroke(seconds)
 
@@ -44,8 +46,7 @@ export const secondsToHMS = (seconds) => {
 }
 
 /**
- * Converts total seconds (from midnight) to time stroke on the form
- * HH:MM or HH:MM:SS.
+ * Converts total seconds (from midnight) to time stroke on the form HH:MM or HH:MM:SS.
  * 3660 --> '01:01'
  */
 export const secondsToStroke = (seconds) => {
@@ -61,8 +62,8 @@ export const secondsToStroke = (seconds) => {
  */
 export const replaceIntervals = (str) => {
   const reInterval = `(${reStroke})\\>(${reStroke})`
-
   const matches = str.matchAll(reInterval)
+
   for (const [match, stroke1, stroke2] of matches) {
     const t1 = replaceStrokes(stroke1)
     const t2 = replaceStrokes(stroke2)
@@ -77,8 +78,8 @@ export const replaceIntervals = (str) => {
  */
 export const replaceStrokes = (str) => {
   const re = /(\d{2}):(\d{2}):?(\d{2})?/g
-
   const matches = str.matchAll(re)
+
   for (const [match, hours, minutes, seconds = 0] of matches) {
     str = str.replace(match, strTimeToSeconds(hours, minutes, seconds))
   }
@@ -92,8 +93,8 @@ export const replaceStrokes = (str) => {
 export const replaceDurations = (str) => {
   // https://stackoverflow.com/questions/72016685/matching-hour-minute-second-hms-duration-string
   const re = /\b(?=\w)(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?\b(?!\w)/g
-
   const matches = str.matchAll(re)
+
   for (const [match, hours = 0, minutes = 0, seconds = 0] of matches) {
     str = str.replace(match, strTimeToSeconds(hours, minutes, seconds))
   }
@@ -118,8 +119,8 @@ export const isTimeStroke = (str) => {
 export const evalStr = (str) => {
   const reWhiteList = /[hms\d\+\-\>\:\(\)]/g
   if (str.length !== str.match(reWhiteList)?.length) return 0 // only allow characters from whitelist
-  str = str.replaceAll('--', '- -') // don't interpret as decrement operator
 
+  str = str.replaceAll('--', '- -') // don't interpret as decrement operator
   try {
     return Function(`'use strict'; return (${str})`)()
   } catch (error) {
@@ -127,36 +128,25 @@ export const evalStr = (str) => {
   }
 }
 
-export const evaluate = (str) => {
-  const str1 = replaceIntervals(str)
-  const str2 = replaceStrokes(str1)
-  const str3 = replaceDurations(str2)
-  const seconds = evalStr(str3)
-
-  if (isTimeStroke(str1)) {
-    return secondsToStroke(seconds)
-  } else {
-    return secondsToHMS(seconds)
-  }
-}
-
-export const evaluateParentheses = (input) => {
+/**
+ * Evaluates all (nested) parentheses and replaces them with their evaluated value.
+ * '(1h30m+01:00)' --> '02:30'
+ */
+export const replaceParentheses = (input) => {
   const re = /\([^(]*?\)/g
-
   const match = input.match(re)?.[0]
   if (!match) return input
 
-  const res = evaluate(match)
-  return evaluateParentheses(input.replace(match, res))
+  const res = evaluateInput(match)
+  return replaceParentheses(input.replace(match, res))
 }
 
 /**
- * Main function which takes the user input.
+ * Evaluates any input which has been stripped from spaces.
+ * '9h-12:30>13:00' --> '8 hours 30 minutes'
  */
-export const handleInput = (input) => {
-  const strippedInput = strip(input)
-  const preparedInput = evaluateParentheses(strippedInput)
-  const str1 = replaceIntervals(preparedInput)
+export const evaluateInput = (input, isOutput = false) => {
+  const str1 = replaceIntervals(input) // also used to determine if input is time stroke.
   const str2 = replaceStrokes(str1)
   const str3 = replaceDurations(str2)
   const seconds = evalStr(str3)
@@ -164,6 +154,15 @@ export const handleInput = (input) => {
   if (isTimeStroke(str1)) {
     return secondsToStroke(seconds)
   } else {
-    return secondsToOutput(seconds)
+    return isOutput ? secondsToOutput(seconds) : secondsToDuration(seconds)
   }
+}
+
+/**
+ * Main function which takes the user input and returns the evaluated expression.
+ */
+export const handleInput = (input) => {
+  const strippedInput = strip(input)
+  const preparedInput = replaceParentheses(strippedInput)
+  return evaluateInput(preparedInput, true)
 }
