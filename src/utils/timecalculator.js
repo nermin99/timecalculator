@@ -12,6 +12,10 @@ export const strTimeToSeconds = (hours, minutes, seconds) => {
   return Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds)
 }
 
+/**
+ * Convert total seconds (from midnight) to representable output string.
+ * 3620 --> '1 hour 20 seconds'
+ */
 export const secondsToOutput = (seconds) => {
   const stroke = secondsToStroke(seconds)
   const [hour, minute, second = 0] = stroke.split(':').map(Number)
@@ -127,11 +131,12 @@ export const evaluate = (str) => {
   const str1 = replaceIntervals(str)
   const str2 = replaceStrokes(str1)
   const str3 = replaceDurations(str2)
-  const str4 = evalStr(str3)
+  const seconds = evalStr(str3)
+
   if (isTimeStroke(str1)) {
-    return secondsToStroke(str4)
+    return secondsToStroke(seconds)
   } else {
-    return secondsToHMS(str4)
+    return secondsToHMS(seconds)
   }
 }
 
@@ -151,12 +156,12 @@ export const evaluateParentheses = (input) => {
 export const evalExpr = (input) => {
   const strippedInput = strip(input)
   const preparedInput = evaluateParentheses(strippedInput)
-  const parsedInput = replaceIntervals(preparedInput)
-  const strokesReplaced = replaceStrokes(parsedInput)
-  const durationsReplaced = replaceDurations(strokesReplaced)
+  const str1 = replaceIntervals(preparedInput)
+  const str2 = replaceStrokes(str1)
+  const str3 = replaceDurations(str2)
+  const seconds = evalStr(str3)
 
-  const seconds = evalStr(durationsReplaced)
-  if (isTimeStroke(parsedInput)) {
+  if (isTimeStroke(str1)) {
     return secondsToStroke(seconds)
   } else {
     return secondsToOutput(seconds)
