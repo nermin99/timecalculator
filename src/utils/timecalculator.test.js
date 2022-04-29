@@ -1,6 +1,8 @@
 import {
   strip,
   strTimeToSeconds,
+  secondsToOutput,
+  secondsToHMS,
   secondsToDuration,
   secondsToStroke,
   evalExpr,
@@ -42,6 +44,18 @@ describe('strip', () => {
 describe('strTimeToSeconds', () => {
   test('should work properly', () => {
     expect(strTimeToSeconds(1, '1', '10')).toBe(3670)
+  })
+})
+
+describe('secondsToOutput', () => {
+  test('should return the proper output', () => {
+    expect(secondsToOutput(3600)).toBe('1 hour')
+  })
+})
+
+describe('secondsToHMS', () => {
+  test('should return the proper hms', () => {
+    expect(secondsToHMS(3620)).toBe('1h20s')
   })
 })
 
