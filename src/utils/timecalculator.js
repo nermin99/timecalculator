@@ -153,7 +153,7 @@ export const evaluateParentheses = (input) => {
 /**
  * Main function which takes the user input.
  */
-export const evalExpr = (input) => {
+export const handleInput = (input) => {
   const strippedInput = strip(input)
   const preparedInput = evaluateParentheses(strippedInput)
   const str1 = replaceIntervals(preparedInput)

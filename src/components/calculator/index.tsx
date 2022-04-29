@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { evalExpr } from 'src/utils/timecalculator'
+import { handleInput } from 'src/utils/timecalculator'
 import { debounce } from 'src/utils/helpers'
 
 import './index.css'
@@ -14,7 +14,7 @@ const Calculator = () => {
 
     const input = e.target.value
 
-    const result = evalExpr(input)
+    const result = handleInput(input)
     const output = input === '' ? '' : result
 
     setResult(output)

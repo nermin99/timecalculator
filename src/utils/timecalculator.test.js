@@ -4,7 +4,7 @@ import {
   secondsToOutput,
   secondsToHMS,
   secondsToStroke,
-  evalExpr,
+  handleInput,
   replaceStrokes,
   replaceDurations,
   replaceIntervals,
@@ -13,23 +13,23 @@ import {
 } from './timecalculator'
 
 test('testing >', () => {
-  expect(evalExpr('08:00 > 09:30')).toBe('1 hour 30 minutes')
+  expect(handleInput('08:00 > 09:30')).toBe('1 hour 30 minutes')
 })
 
 test('testing +', () => {
-  expect(evalExpr('08:00 + 1h30m')).toBe('09:30')
+  expect(handleInput('08:00 + 1h30m')).toBe('09:30')
 })
 
 test('testing -', () => {
-  expect(evalExpr('1h - 2h10m')).toBe('-1 hour 10 minutes')
+  expect(handleInput('1h - 2h10m')).toBe('-1 hour 10 minutes')
 })
 
 test('testing - and seconds', () => {
-  expect(evalExpr('08:00 - 30m10s')).toBe('07:29:50')
+  expect(handleInput('08:00 - 30m10s')).toBe('07:29:50')
 })
 
 test('should wrap around 24h', () => {
-  expect(evalExpr('23:00 + 2h')).toBe('01:00')
+  expect(handleInput('23:00 + 2h')).toBe('01:00')
 })
 
 describe('strip', () => {
@@ -94,10 +94,10 @@ describe('replaceDurations', () => {
     expect(replaceDurations('1h30m20s')).toBe('5420')
   })
   test('simple addition', () => {
-    expect(evalExpr('1h + 1h30m')).toBe('2 hours 30 minutes')
+    expect(handleInput('1h + 1h30m')).toBe('2 hours 30 minutes')
   })
   test('more complex', () => {
-    expect(evalExpr('00:00 > 01:00 + 1h30m')).toBe('2 hours 30 minutes')
+    expect(handleInput('00:00 > 01:00 + 1h30m')).toBe('2 hours 30 minutes')
   })
 })
 
@@ -115,7 +115,7 @@ describe('isTimeStroke', () => {
     expect(isTimeStroke(strip('00:00 > 01:00 + 02:00 > 03:00'))).toBe(false)
   })
   test('no match complex', () => {
-    expect(evalExpr(strip('00:00 > 01:00 + 1h'))).toBe('2 hours')
+    expect(handleInput(strip('00:00 > 01:00 + 1h'))).toBe('2 hours')
   })
   test('front match', () => {
     expect(isTimeStroke(strip('1h + 08:00'))).toBe(true)
@@ -127,12 +127,14 @@ describe('isTimeStroke', () => {
 
 describe('the priority of operators', () => {
   test('priority without parentheses', () => {
-    expect(evalExpr('01:00 > 02:00 + 02:00 > 03:00')).toBe('2 hours')
+    expect(handleInput('01:00 > 02:00 + 02:00 > 03:00')).toBe('2 hours')
   })
   test('priority with parentheses', () => {
-    expect(evalExpr('(1h + 01:00) > (02:00 + 2h)')).toBe('2 hours')
+    expect(handleInput('(1h + 01:00) > (02:00 + 2h)')).toBe('2 hours')
   })
   test('nested parentheses', () => {
-    expect(evalExpr('(00:00+ (01:00>02:00)) > (04:00+ (1h-2h30m))')).toBe('1 hour 30 minutes')
+    expect(handleInput('(00:00+ (01:00>02:00)) > (04:00+ (1h-2h30m))')).toBe(
+      '1 hour 30 minutes'
+    )
   })
 })
