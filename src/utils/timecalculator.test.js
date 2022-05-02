@@ -1,36 +1,38 @@
 import {
   strip,
   strTimeToSeconds,
-  secondsToOutput,
-  secondsToDuration,
-  secondsToStroke,
-  handleInput,
-  replaceParentheses,
+  replaceIntervals,
   replaceStrokes,
   replaceDurations,
-  replaceIntervals,
   evalStr,
   isTimeStroke,
+  secondsToStroke,
+  secondsToDuration,
+  secondsToOutput,
+  replaceParentheses,
+  handleInput,
 } from './timecalculator'
 
-test('testing >', () => {
-  expect(handleInput('08:00 > 09:30')).toBe('1 hour 30 minutes')
-})
+describe('handleInput', () => {
+  test('testing >', () => {
+    expect(handleInput('08:00 > 09:30')).toBe('1 hour 30 minutes')
+  })
 
-test('testing +', () => {
-  expect(handleInput('08:00 + 1h30m')).toBe('09:30')
-})
+  test('testing +', () => {
+    expect(handleInput('08:00 + 1h30m')).toBe('09:30')
+  })
 
-test('testing -', () => {
-  expect(handleInput('1h - 2h10m')).toBe('-1 hour 10 minutes')
-})
+  test('testing -', () => {
+    expect(handleInput('1h - 2h10m')).toBe('-1 hour 10 minutes')
+  })
 
-test('testing - and seconds', () => {
-  expect(handleInput('08:00 - 30m10s')).toBe('07:29:50')
-})
+  test('testing - and seconds', () => {
+    expect(handleInput('08:00 - 30m10s')).toBe('07:29:50')
+  })
 
-test('should wrap around 24h', () => {
-  expect(handleInput('23:00 + 2h')).toBe('01:00')
+  test('should wrap around 24h', () => {
+    expect(handleInput('23:00 + 2h')).toBe('01:00')
+  })
 })
 
 describe('strip', () => {
@@ -42,42 +44,6 @@ describe('strip', () => {
 describe('strTimeToSeconds', () => {
   test('should work properly', () => {
     expect(strTimeToSeconds(1, '1', '10')).toBe(3670)
-  })
-})
-
-describe('secondsToOutput', () => {
-  test('should return the proper output', () => {
-    expect(secondsToOutput(3600)).toBe('1 hour')
-  })
-  test('negative seconds', () => {
-    expect(secondsToOutput(-70)).toBe('-1 minute 10 seconds')
-  })
-})
-
-describe('secondsToDuration', () => {
-  test('should return the proper hms', () => {
-    expect(secondsToDuration(3620)).toBe('1h20s')
-  })
-  test('negative seconds', () => {
-    expect(secondsToDuration(-3670)).toBe('-1h1m10s')
-  })
-})
-
-describe('secondsToStroke', () => {
-  test('HH:MM', () => {
-    expect(secondsToStroke(3660)).toBe('01:01')
-  })
-  test('HH:MM:SS', () => {
-    expect(secondsToStroke(3670)).toBe('01:01:10')
-  })
-  test('negative seconds should be treated as positive', () => {
-    expect(secondsToStroke(-3670)).toBe('01:01:10')
-  })
-})
-
-describe('replaceParentheses', () => {
-  test('simple', () => {
-    expect(replaceParentheses(strip('(1h + 01:00) > (02:00 + 2h30s)'))).toBe('02:00>04:00:30')
   })
 })
 
@@ -129,6 +95,42 @@ describe('isTimeStroke', () => {
   })
   test('back match', () => {
     expect(isTimeStroke(strip('08:00 + 1h30m'))).toBe(true)
+  })
+})
+
+describe('secondsToStroke', () => {
+  test('HH:MM', () => {
+    expect(secondsToStroke(3660)).toBe('01:01')
+  })
+  test('HH:MM:SS', () => {
+    expect(secondsToStroke(3670)).toBe('01:01:10')
+  })
+  test('negative seconds should be treated as positive', () => {
+    expect(secondsToStroke(-3670)).toBe('01:01:10')
+  })
+})
+
+describe('secondsToDuration', () => {
+  test('should return the proper hms', () => {
+    expect(secondsToDuration(3620)).toBe('1h20s')
+  })
+  test('negative seconds', () => {
+    expect(secondsToDuration(-3670)).toBe('-1h1m10s')
+  })
+})
+
+describe('secondsToOutput', () => {
+  test('should return the proper output', () => {
+    expect(secondsToOutput(3600)).toBe('1 hour')
+  })
+  test('negative seconds', () => {
+    expect(secondsToOutput(-70)).toBe('-1 minute 10 seconds')
+  })
+})
+
+describe('replaceParentheses', () => {
+  test('simple', () => {
+    expect(replaceParentheses(strip('(1h + 01:00) > (02:00 + 2h30s)'))).toBe('02:00>04:00:30')
   })
 })
 
