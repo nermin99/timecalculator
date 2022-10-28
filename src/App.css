@@ -23,3 +23,23 @@ body {
   justify-content: center;
   background-color: var(--color-1);
 }
+
+.ribbon {
+  padding: 0.6em 0;
+  color: var(--color-1);
+  text-decoration: none;
+  /* https://www.freecodecamp.org/news/make-a-css-only-ribbon/ */
+  position: fixed;
+  background: var(--color-3);
+  box-shadow: 0 0 0 999px var(--color-3);
+  clip-path: inset(0 -100%);
+  inset: 0 0 auto auto; /* top and right equal to 0 */
+  transform-origin: 0 0; /* OR top left */
+  transform: translate(29.3%) rotate(45deg);
+}
+
+@media (max-width: 768px) {
+  .ribbon {
+    display: none;
+  }
+}
