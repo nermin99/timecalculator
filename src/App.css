@@ -45,3 +45,13 @@ body {
     display: none;
   }
 }
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-1: #e0e0e0;
+    --color-2: #e0e0e0;
+    --color-3: #222831;
+    --shadow-color-1: #b3b3b3;
+    --shadow-color-2: #ffffff;
+  }
+}
