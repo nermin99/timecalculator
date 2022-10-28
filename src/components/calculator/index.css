@@ -33,8 +33,10 @@
 .input {
   color: var(--color-3);
   background: var(--color-2);
-  box-shadow: var(--shadow) var(--shadow) calc(2 * var(--shadow)) #1b2027,
-    calc(-1 * var(--shadow)) calc(-1 * var(--shadow)) calc(2 * var(--shadow)) #29303b;
+  box-shadow: var(--shadow-distance) var(--shadow-distance) calc(2 * var(--shadow-distance))
+      var(--shadow-color-1),
+    calc(-1 * var(--shadow-distance)) calc(-1 * var(--shadow-distance))
+      calc(2 * var(--shadow-distance)) var(--shadow-color-2);
 }
 
 .result {

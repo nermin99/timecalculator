@@ -2,7 +2,9 @@
   --color-1: #222831;
   --color-2: #393e46;
   --color-3: #eeeeee;
-  --shadow: 12px;
+  --shadow-distance: 12px;
+  --shadow-color-1: #1b2027;
+  --shadow-color-2: #29303b;
 }
 
 html {
