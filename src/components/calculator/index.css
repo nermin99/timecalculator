@@ -10,7 +10,7 @@
   font-size: inherit;
   font-family: inherit;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI';
-  width: clamp(10em, 50vw, 24em);
+  width: min(50vw, 90rem);
   padding: 0.5em;
   border: none;
   border-radius: 25px;
@@ -22,6 +22,7 @@
 }
 
 .result {
+  color: var(--color-3);
   margin-top: 5rem;
   font-size: 4.5rem;
   min-height: 5rem;
@@ -39,6 +40,8 @@
       calc(2 * var(--shadow-distance)) var(--shadow-color-2);
 }
 
-.result {
-  color: var(--color-3);
+@media (max-width: 768px) {
+  .input {
+    width: 80vw;
+  }
 }
