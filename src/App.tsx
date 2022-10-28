@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="App">
       <a href="https://github.com/nermin99/timecalculator" className="ribbon">
-        Check me out on GitHub!
+        Check it out on GitHub!
       </a>
       <Calculator />
     </div>
