@@ -13,6 +13,12 @@ import {
   handleInput,
 } from './timecalculator'
 
+describe('strip', () => {
+  test('should remove all whitespace from str', () => {
+    expect(strip('  1h +   2h  ')).toBe('1h+2h')
+  })
+})
+
 describe('handleInput', () => {
   test('testing >', () => {
     expect(handleInput('08:00 > 09:30')).toBe('1 hour 30 minutes')
@@ -32,12 +38,6 @@ describe('handleInput', () => {
 
   test('should wrap around 24h', () => {
     expect(handleInput('23:00 + 2h')).toBe('01:00')
-  })
-})
-
-describe('strip', () => {
-  test('should remove all whitespace from str', () => {
-    expect(strip(' 1h + 2h ')).toBe('1h+2h')
   })
 })
 
