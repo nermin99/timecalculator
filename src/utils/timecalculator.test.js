@@ -147,3 +147,15 @@ describe('the priority of operators', () => {
     )
   })
 })
+
+describe('wrap 24h', () => {
+  test('stroke + duration', () => {
+    expect(handleInput('23:00 + 2h')).toBe('01:00')
+  })
+  test('replaceIntervals', () => {
+    expect(replaceIntervals('23:00>01:00')).toBe('7200')
+  })
+  test('interval', () => {
+    expect(handleInput('23:00 > 01:00')).toBe('2 hours')
+  })
+})

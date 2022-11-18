@@ -1,6 +1,8 @@
 // Matches time strokes on the form HH:MM and HH:MM:SS
 const reStroke = '\\d{2}:\\d{2}(?::\\d{2})?'
 
+const DAY_IN_SECONDS = 86400 // 24 * 60 * 60
+
 /**
  * Remove all whitespace from string.
  */
@@ -23,9 +25,10 @@ export const replaceIntervals = (str) => {
   const matches = str.matchAll(reInterval)
 
   for (const [match, stroke1, stroke2] of matches) {
-    const t1 = replaceStrokes(stroke1)
-    const t2 = replaceStrokes(stroke2)
-    str = str.replace(match, Number(t2) - Number(t1))
+    const t1 = Number(replaceStrokes(stroke1))
+    let t2 = Number(replaceStrokes(stroke2))
+    if (t1 > t2) t2 += DAY_IN_SECONDS
+    str = str.replace(match, t2 - t1)
   }
   return str
 }

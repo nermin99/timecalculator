@@ -18,7 +18,7 @@
 
 ## Syntax
 
-### Definitions:
+### Definitions
 
 `time stroke` - The time of day **HH:MM:SS** or just **HH:MM** (24-hour clock). `E.g. 17:30`
 
@@ -26,13 +26,13 @@
 
 `time interval` - The amount of time between two time strokes, which when evaluated, will result in a time duration. `E.g. 12:00 > 13:30`
 
-### Operators:
+### Operators
 
 `+` and `-` is used for addition and subtraction of time durations but can also be used to add/subtract time durations to time strokes.
 
 `(` and `)` is used just, like in math, for prioritization.
 
-`>` is used for defining time intervals. It's used like `HH:MM(:SS) > HH:MM(:SS)` and the second argument needs to be later (but still within the same 24-hours) than the first.
+`>` is used for defining time intervals. It's used like `HH:MM(:SS) > HH:MM(:SS)`.
 
 ## Deployment
 
