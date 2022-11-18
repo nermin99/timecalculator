@@ -10,7 +10,7 @@ export const strip = (str: string) => str.replace(/\s+/g, '')
 
 /**
  * Get total number of seconds from hours, minutes, and seconds.
- * (1, 1, 0) --> 3660
+ * (1, 1, 0) -> 3660
  */
 export const strTimeToSeconds = (hours: number, minutes: number, seconds: number) => {
   return hours * 3600 + minutes * 60 + seconds
@@ -18,7 +18,7 @@ export const strTimeToSeconds = (hours: number, minutes: number, seconds: number
 
 /**
  * Replaces time intervals with the time duration in seconds.
- * '01:00>02:00' --> '3600'
+ * '01:00>02:00' -> '3600'
  */
 export const replaceIntervals = (str: string) => {
   const reInterval = new RegExp(`(${reStroke})\\>(${reStroke})`, 'g')
@@ -35,7 +35,7 @@ export const replaceIntervals = (str: string) => {
 
 /**
  * Converts time strokes (from midnight) to seconds.
- * '01:30' --> '5400'
+ * '01:30' -> '5400'
  */
 export const replaceStrokes = (str: string) => {
   const re = /(\d{2}):(\d{2}):?(\d{2})?/g
@@ -52,7 +52,7 @@ export const replaceStrokes = (str: string) => {
 
 /**
  * Converts explicit time durations to seconds.
- * '1h30m20s' --> '5420'
+ * '1h30m20s' -> '5420'
  */
 export const replaceDurations = (str: string) => {
   // https://stackoverflow.com/questions/72016685/matching-hour-minute-second-hms-duration-string
@@ -70,7 +70,7 @@ export const replaceDurations = (str: string) => {
 
 /**
  * Evaluate mathematical expressions.
- * '3600+3600' --> 7200
+ * '3600+3600' -> 7200
  */
 export const evalStr = (str: string) => {
   const reWhiteList = /[hms\d\+\-\>\:\(\)]/g
@@ -97,7 +97,7 @@ export const isTimeStroke = (str: string) => {
 
 /**
  * Converts total seconds (from midnight) to time stroke on the form HH:MM or HH:MM:SS.
- * 3660 --> '01:01'
+ * 3660 -> '01:01'
  */
 export const secondsToStroke = (seconds: number) => {
   seconds = Math.abs(Number(seconds)) // can only deal with positive numbers
@@ -108,7 +108,7 @@ export const secondsToStroke = (seconds: number) => {
 
 /**
  * Converts total seconds (from midnight) to time duration on the form hms.
- * 3620 --> '1h20s'
+ * 3620 -> '1h20s'
  */
 export const secondsToDuration = (seconds: number) => {
   const re = /(?<h>\d{2}):(?<m>\d{2}):?(?<s>\d{2})?/g
@@ -123,7 +123,7 @@ export const secondsToDuration = (seconds: number) => {
 
 /**
  * Convert total seconds (from midnight) to representable output string.
- * 3620 --> '1 hour 20 seconds'
+ * 3620 -> '1 hour 20 seconds'
  */
 export const secondsToOutput = (seconds: number) => {
   const stroke = secondsToStroke(seconds)
@@ -139,7 +139,7 @@ export const secondsToOutput = (seconds: number) => {
 
 /**
  * Evaluates all (nested) parentheses and replaces them with their evaluated value.
- * '(1h30m+01:00)' --> '02:30'
+ * '(1h30m+01:00)' -> '02:30'
  */
 export const replaceParentheses = (input: string): string => {
   const re = /\([^(]*?\)/g
@@ -152,7 +152,7 @@ export const replaceParentheses = (input: string): string => {
 
 /**
  * Evaluates any input which has been stripped from spaces.
- * '9h-12:30>13:00' --> '8 hours 30 minutes'
+ * '9h-12:30>13:00' -> '8 hours 30 minutes'
  */
 export const evaluateInput = (input: string, isOutput = false) => {
   const str1 = replaceIntervals(input) // also used to determine if input is time stroke.
