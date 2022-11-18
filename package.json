@@ -11,7 +11,9 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "lint": "prettier --check src",
-    "lint:fix": "prettier --write src"
+    "lint:fix": "prettier --write src",
+    "typecheck": "tsc",
+    "typecheck:watch": "tsc -w"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",

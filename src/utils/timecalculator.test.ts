@@ -43,7 +43,7 @@ describe('handleInput', () => {
 
 describe('strTimeToSeconds', () => {
   test('should work properly', () => {
-    expect(strTimeToSeconds(1, '1', '10')).toBe(3670)
+    expect(strTimeToSeconds(1, 1, 10)).toBe(3670)
   })
 })
 
