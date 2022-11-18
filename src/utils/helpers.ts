@@ -3,14 +3,14 @@
  * @param fn to be debounced
  * @param delay time in milliseconds
  */
-export const debounce = (fn: Function, delay: number) => {
-  let timer: ReturnType<typeof setTimeout>
-  return (...args: any[]) => {
-    const context = this
-    clearTimeout(timer)
-    timer = setTimeout(() => {
-      fn.apply(context, args)
-    }, delay)
+export function debounce<F extends (...args: Parameters<F>) => ReturnType<F>>(
+  fn: F,
+  delay: number
+): (...args: Parameters<F>) => void {
+  let timeout: ReturnType<typeof setTimeout>
+  return (...args: Parameters<F>): void => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => fn(...args), delay)
   }
 }
 
