@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, ChangeEvent } from 'react'
 import { handleInput } from 'src/utils/timecalculator'
 import { debounce } from 'src/utils/helpers'
 
@@ -9,7 +9,7 @@ const DEBOUNCE_DELAY = 500
 const Calculator = () => {
   const [result, setResult] = useState('')
 
-  const handleEvent = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEvent = debounce((e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value
 
     const result = handleInput(input)
