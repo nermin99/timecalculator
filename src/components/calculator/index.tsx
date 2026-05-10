@@ -30,6 +30,10 @@ const Calculator = () => {
 
   return (
     <div className="calculator">
+      <div className="result-area">
+        <div className="result">{result}</div>
+        <div className="day-offset">{dayOffsetLabel}</div>
+      </div>
       <form className="calculator-form" onSubmit={(e) => e.preventDefault()}>
         <input
           onChange={handleEvent}
@@ -40,8 +44,6 @@ const Calculator = () => {
           autoFocus
         />
       </form>
-      <div className="result">{result}</div>
-      {dayOffsetLabel && <div className="day-offset">{dayOffsetLabel}</div>}
     </div>
   )
 }
