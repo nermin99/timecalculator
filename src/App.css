@@ -10,6 +10,7 @@
 html {
   box-sizing: border-box;
   font-size: 10px;
+  background-color: var(--color-1);
 }
 
 body {
