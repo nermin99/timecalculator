@@ -1,6 +1,6 @@
 .calculator {
   font-size: 3rem;
-  height: 100vh;
+  height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -57,7 +57,7 @@
 
 .hints-container {
   margin-top: 10rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
   width: 100%;
   display: flex;
   justify-content: center;
