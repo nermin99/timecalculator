@@ -55,6 +55,10 @@ describe('handleInput', () => {
   test('dayOffset is 0 for durations (not time strokes)', () => {
     expect(handleInput('1h + 2h').dayOffset).toBe(0)
   })
+
+  test('duration over 24 hours', () => {
+    expect(handleInput('23h + 2h').result).toBe('25 hours')
+  })
 })
 
 describe('strTimeToSeconds', () => {
@@ -133,6 +137,9 @@ describe('secondsToDuration', () => {
   test('negative seconds', () => {
     expect(secondsToDuration(-3670)).toBe('-1h1m10s')
   })
+  test('duration over 24 hours', () => {
+    expect(secondsToDuration(90000)).toBe('25h')
+  })
 })
 
 describe('secondsToOutput', () => {
@@ -141,6 +148,9 @@ describe('secondsToOutput', () => {
   })
   test('negative seconds', () => {
     expect(secondsToOutput(-70)).toBe('-1 minute 10 seconds')
+  })
+  test('duration over 24 hours', () => {
+    expect(secondsToOutput(90000)).toBe('25 hours')
   })
 })
 

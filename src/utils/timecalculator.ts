@@ -111,13 +111,14 @@ export const secondsToStroke = (seconds: number) => {
  * 3620 -> '1h20s'
  */
 export const secondsToDuration = (seconds: number) => {
-  const re = /(?<h>\d{2}):(?<m>\d{2}):?(?<s>\d{2})?/g
-  const stroke = secondsToStroke(seconds)
+  const abs = Math.abs(Math.round(Number(seconds)))
+  const h = Math.floor(abs / 3600)
+  const m = Math.floor((abs % 3600) / 60)
+  const s = abs % 60
 
-  const match = re.exec(stroke)
-  const str = Object.entries(match?.groups ?? [])
-    .filter(([, val]) => val && val !== '00')
-    .reduce((acc, [unit, val]) => acc + Number(val) + unit, '')
+  const str = Object.entries({ h, m, s })
+    .filter(([, val]) => val !== 0)
+    .reduce((acc, [unit, val]) => acc + val + unit, '')
   return seconds < 0 ? '-' + str : str
 }
 
@@ -126,12 +127,14 @@ export const secondsToDuration = (seconds: number) => {
  * 3620 -> '1 hour 20 seconds'
  */
 export const secondsToOutput = (seconds: number) => {
-  const stroke = secondsToStroke(seconds)
-  const [hour, minute, second = 0] = stroke.split(':').map(Number)
+  const abs = Math.abs(Math.round(Number(seconds)))
+  const hour = Math.floor(abs / 3600)
+  const minute = Math.floor((abs % 3600) / 60)
+  const second = abs % 60
 
   let str = Object.entries({ hour, minute, second })
     .filter(([, val]) => val !== 0)
-    .reduce((acc, [unit, val]) => `${acc} ${val} ${unit}${Math.abs(val) === 1 ? '' : 's'}`, '')
+    .reduce((acc, [unit, val]) => `${acc} ${val} ${unit}${val === 1 ? '' : 's'}`, '')
     .trim()
   if (seconds < 0) str = '-' + str
   return str === '' ? '0 hours 0 minutes 0 seconds' : str
