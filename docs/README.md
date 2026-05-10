@@ -34,7 +34,19 @@
 
 `>` is used for defining time intervals. It's used like `HH:MM(:SS) > HH:MM(:SS)`.
 
-## Deployment
+---
+
+## Developing
+
+### Local development
+
+Run the following to start the project locally
+
+```shell
+npm start
+```
+
+### Deployment
 
 Run the following to build and deploy the site to github pages
 
