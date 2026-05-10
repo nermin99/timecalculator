@@ -1,5 +1,9 @@
 {
-  "extends": ["react-app", "react-app/jest"],
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "node": true
+  },
   "rules": {
     "no-new-func": "off",
     "no-useless-escape": "off"

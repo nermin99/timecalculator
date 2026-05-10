@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent } from 'react'
-import { handleInput } from 'src/utils/timecalculator'
-import { debounce } from 'src/utils/helpers'
+import { handleInput } from '../../utils/timecalculator'
+import { debounce } from '../../utils/helpers'
 
 import './index.css'
 
