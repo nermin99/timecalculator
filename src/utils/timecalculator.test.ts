@@ -21,23 +21,39 @@ describe('strip', () => {
 
 describe('handleInput', () => {
   test('testing >', () => {
-    expect(handleInput('08:00 > 09:30')).toBe('1 hour 30 minutes')
+    expect(handleInput('08:00 > 09:30').result).toBe('1 hour 30 minutes')
   })
 
   test('testing +', () => {
-    expect(handleInput('08:00 + 1h30m')).toBe('09:30')
+    expect(handleInput('08:00 + 1h30m').result).toBe('09:30')
   })
 
   test('testing -', () => {
-    expect(handleInput('1h - 2h10m')).toBe('-1 hour 10 minutes')
+    expect(handleInput('1h - 2h10m').result).toBe('-1 hour 10 minutes')
   })
 
   test('testing - and seconds', () => {
-    expect(handleInput('08:00 - 30m10s')).toBe('07:29:50')
+    expect(handleInput('08:00 - 30m10s').result).toBe('07:29:50')
   })
 
   test('should wrap around 24h', () => {
-    expect(handleInput('23:00 + 2h')).toBe('01:00')
+    expect(handleInput('23:00 + 2h').result).toBe('01:00')
+  })
+
+  test('dayOffset is 0 for same-day result', () => {
+    expect(handleInput('08:00 + 1h').dayOffset).toBe(0)
+  })
+
+  test('dayOffset is +1 when overflowing midnight', () => {
+    expect(handleInput('23:00 + 2h').dayOffset).toBe(1)
+  })
+
+  test('dayOffset is -1 when underflowing midnight', () => {
+    expect(handleInput('01:00 - 3h').dayOffset).toBe(-1)
+  })
+
+  test('dayOffset is 0 for durations (not time strokes)', () => {
+    expect(handleInput('1h + 2h').dayOffset).toBe(0)
   })
 })
 
@@ -67,10 +83,10 @@ describe('replaceDurations', () => {
     expect(replaceDurations('1h30m20s')).toBe('5420')
   })
   test('simple addition', () => {
-    expect(handleInput('1h + 1h30m')).toBe('2 hours 30 minutes')
+    expect(handleInput('1h + 1h30m').result).toBe('2 hours 30 minutes')
   })
   test('more complex', () => {
-    expect(handleInput('00:00 > 01:00 + 1h30m')).toBe('2 hours 30 minutes')
+    expect(handleInput('00:00 > 01:00 + 1h30m').result).toBe('2 hours 30 minutes')
   })
 })
 
@@ -88,7 +104,7 @@ describe('isTimeStroke', () => {
     expect(isTimeStroke(strip('00:00 > 01:00 + 02:00 > 03:00'))).toBe(false)
   })
   test('no match complex', () => {
-    expect(handleInput(strip('00:00 > 01:00 + 1h'))).toBe('2 hours')
+    expect(handleInput(strip('00:00 > 01:00 + 1h')).result).toBe('2 hours')
   })
   test('front match', () => {
     expect(isTimeStroke(strip('1h + 08:00'))).toBe(true)
@@ -136,13 +152,13 @@ describe('replaceParentheses', () => {
 
 describe('the priority of operators', () => {
   test('priority without parentheses', () => {
-    expect(handleInput('01:00 > 02:00 + 02:00 > 03:00')).toBe('2 hours')
+    expect(handleInput('01:00 > 02:00 + 02:00 > 03:00').result).toBe('2 hours')
   })
   test('priority with parentheses', () => {
-    expect(handleInput('(1h + 01:00) > (02:00 + 2h)')).toBe('2 hours')
+    expect(handleInput('(1h + 01:00) > (02:00 + 2h)').result).toBe('2 hours')
   })
   test('nested parentheses', () => {
-    expect(handleInput('(00:00+ (01:00>02:00)) > (04:00+ (1h-2h30m))')).toBe(
+    expect(handleInput('(00:00+ (01:00>02:00)) > (04:00+ (1h-2h30m))').result).toBe(
       '1 hour 30 minutes'
     )
   })
@@ -150,12 +166,12 @@ describe('the priority of operators', () => {
 
 describe('wrap 24h', () => {
   test('stroke + duration', () => {
-    expect(handleInput('23:00 + 2h')).toBe('01:00')
+    expect(handleInput('23:00 + 2h').result).toBe('01:00')
   })
   test('replaceIntervals', () => {
     expect(replaceIntervals('23:00>01:00')).toBe('7200')
   })
   test('interval', () => {
-    expect(handleInput('23:00 > 01:00')).toBe('2 hours')
+    expect(handleInput('23:00 > 01:00').result).toBe('2 hours')
   })
 })

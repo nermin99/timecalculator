@@ -170,8 +170,17 @@ export const evaluateInput = (input: string, isOutput = false) => {
 /**
  * Main function which takes the user input and returns the evaluated expression.
  */
-export const handleInput = (input: string) => {
+export const handleInput = (input: string): { result: string; dayOffset: number } => {
   const strippedInput = strip(input)
   const preparedInput = replaceParentheses(strippedInput)
-  return evaluateInput(preparedInput, true)
+
+  const str1 = replaceIntervals(preparedInput)
+  let dayOffset = 0
+
+  if (isTimeStroke(str1)) {
+    const seconds = evalStr(replaceDurations(replaceStrokes(str1)))
+    dayOffset = Math.floor(seconds / DAY_IN_SECONDS)
+  }
+
+  return { result: evaluateInput(preparedInput, true), dayOffset }
 }

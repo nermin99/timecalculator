@@ -30,6 +30,13 @@
   font-family: monospace;
 }
 
+.day-offset {
+  color: var(--color-3);
+  font-size: 1.5rem;
+  opacity: 0.6;
+  font-family: monospace;
+}
+
 /* Color Theme */
 .input {
   color: var(--color-3);
