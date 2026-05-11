@@ -1,21 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#222831" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#e0e0e0" media="(prefers-color-scheme: light)" />
-    <meta name="description" content="Time Calculator - calculate durations and time intervals" />
-    <link rel="manifest" href="/manifest.json" />
-    <title>Time Calculator</title>
-    <script type="module" crossorigin src="/assets/index-CtMDbU3X.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CziPAVha.css">
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-  </body>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#222831" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#e0e0e0" media="(prefers-color-scheme: light)" />
+
+  <title>TimeCalculator.guru - The time & duration calculator.</title>
+  <meta name="description" content="Free online easy to use calculator for time and duration expressions." />
+  <link rel="canonical" href="https://timecalculator.guru/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://timecalculator.guru/" />
+  <meta property="og:title" content="TimeCalculator.guru - The time & duration calculator." />
+  <meta property="og:description" content="Free online easy to use calculator for time and duration expressions." />
+  <meta property="og:image" content="https://timecalculator.guru/og-image.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TimeCalculator.guru - The time & duration calculator." />
+  <meta name="twitter:description" content="Free online easy to use calculator for time and duration expressions." />
+  <meta name="twitter:image" content="https://timecalculator.guru/og-image.png" />
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Time Calculator",
+      "url": "https://timecalculator.guru/",
+      "description": "Free online easy to use calculator for time and duration expressions.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+
+  <link rel="manifest" href="/manifest.json" />
+  <script type="module" crossorigin src="/assets/index-CtMDbU3X.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-CziPAVha.css">
+</head>
+
+<body>
+  <noscript>
+    <h1>Time Calculator</h1>
+    <p>Calculate the duration between two times, add or subtract time durations, and group expressions with parentheses.
+      JavaScript is required to use this tool.</p>
+    <ul>
+      <li>08:00 &gt; 17:30 — duration between two times</li>
+      <li>1h30m + 45m — add or subtract durations</li>
+      <li>08:00 - 1h30m — subtract a duration from a time</li>
+      <li>(1h + 08:00) &gt; 12:00 — group with parentheses</li>
+    </ul>
+  </noscript>
+  <div id="root"></div>
+</body>
+
 </html>
