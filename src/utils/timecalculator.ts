@@ -170,10 +170,18 @@ export const evaluateInput = (input: string, isOutput = false) => {
   }
 }
 
+const intervalsCrossMidnight = (str: string) => {
+  const reInterval = new RegExp(`(${reStroke})\\>(${reStroke})`, 'g')
+  for (const [, stroke1, stroke2] of str.matchAll(reInterval)) {
+    if (Number(replaceStrokes(stroke1)) > Number(replaceStrokes(stroke2))) return true
+  }
+  return false
+}
+
 /**
  * Main function which takes the user input and returns the evaluated expression.
  */
-export const handleInput = (input: string): { result: string; dayOffset: number } => {
+export const handleInput = (input: string): { result: string; dayOffset: number; midnightCrossing: boolean } => {
   const strippedInput = strip(input)
   const preparedInput = replaceParentheses(strippedInput)
 
@@ -185,5 +193,7 @@ export const handleInput = (input: string): { result: string; dayOffset: number 
     dayOffset = Math.floor(seconds / DAY_IN_SECONDS)
   }
 
-  return { result: evaluateInput(preparedInput, true), dayOffset }
+  const midnightCrossing = !isTimeStroke(str1) && intervalsCrossMidnight(preparedInput)
+
+  return { result: evaluateInput(preparedInput, true), dayOffset, midnightCrossing }
 }

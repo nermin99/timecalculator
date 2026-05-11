@@ -10,16 +10,19 @@ const DEBOUNCE_DELAY = 500
 const Calculator = () => {
   const [result, setResult] = useState('')
   const [dayOffset, setDayOffset] = useState(0)
+  const [midnightCrossing, setMidnightCrossing] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const processInput = (input: string) => {
     if (input === '') {
       setResult('')
       setDayOffset(0)
+      setMidnightCrossing(false)
     } else {
-      const { result, dayOffset } = handleInput(input)
+      const { result, dayOffset, midnightCrossing } = handleInput(input)
       setResult(result)
       setDayOffset(dayOffset)
+      setMidnightCrossing(midnightCrossing)
     }
   }
 
@@ -36,7 +39,9 @@ const Calculator = () => {
   const dayOffsetLabel =
     dayOffset !== 0
       ? `(${dayOffset > 0 ? '+' : '-'} ${Math.abs(dayOffset)} ${Math.abs(dayOffset) === 1 ? 'day' : 'days'})`
-      : null
+      : midnightCrossing
+        ? '(next day)'
+        : null
 
   return (
     <div className="calculator">
@@ -62,7 +67,9 @@ const Calculator = () => {
           autoFocus
         />
       </form>
-      <button className="random-button" onClick={handleRandom}>random</button>
+      <button className="random-button" onClick={handleRandom}>
+        random
+      </button>
       <div className="hints-container">
         <div className="hints">
           <h3 className="hints-heading">Usage</h3>
