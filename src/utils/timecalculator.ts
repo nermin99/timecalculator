@@ -181,19 +181,20 @@ const intervalsCrossMidnight = (str: string) => {
 /**
  * Main function which takes the user input and returns the evaluated expression.
  */
-export const handleInput = (input: string): { result: string; dayOffset: number; midnightCrossing: boolean } => {
+export const handleInput = (input: string): { result: string; resultIsTime: boolean; dayOffset: number; midnightCrossing: boolean } => {
   const strippedInput = strip(input)
   const preparedInput = replaceParentheses(strippedInput)
 
   const str1 = replaceIntervals(preparedInput)
+  const resultIsTime = isTimeStroke(str1)
   let dayOffset = 0
 
-  if (isTimeStroke(str1)) {
+  if (resultIsTime) {
     const seconds = evalStr(replaceDurations(replaceStrokes(str1)))
     dayOffset = Math.floor(seconds / DAY_IN_SECONDS)
   }
 
-  const midnightCrossing = !isTimeStroke(str1) && intervalsCrossMidnight(preparedInput)
+  const midnightCrossing = !resultIsTime && intervalsCrossMidnight(preparedInput)
 
-  return { result: evaluateInput(preparedInput, true), dayOffset, midnightCrossing }
+  return { result: evaluateInput(preparedInput, true), resultIsTime, dayOffset, midnightCrossing }
 }

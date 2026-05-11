@@ -9,6 +9,7 @@ const DEBOUNCE_DELAY = 500
 
 const Calculator = () => {
   const [result, setResult] = useState('')
+  const [resultIsTime, setResultIsTime] = useState(false)
   const [dayOffset, setDayOffset] = useState(0)
   const [midnightCrossing, setMidnightCrossing] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -16,11 +17,13 @@ const Calculator = () => {
   const processInput = (input: string) => {
     if (input === '') {
       setResult('')
+      setResultIsTime(false)
       setDayOffset(0)
       setMidnightCrossing(false)
     } else {
-      const { result, dayOffset, midnightCrossing } = handleInput(input)
+      const { result, resultIsTime, dayOffset, midnightCrossing } = handleInput(input)
       setResult(result)
+      setResultIsTime(resultIsTime)
       setDayOffset(dayOffset)
       setMidnightCrossing(midnightCrossing)
     }
@@ -36,6 +39,28 @@ const Calculator = () => {
     processInput(random)
   }
 
+  const renderResult = (result: string) => {
+    if (resultIsTime) {
+      const parts = result.split(':')
+      return (
+        <>
+          {parts.map((part, i) => (
+            <React.Fragment key={i}>
+              {i > 0 && <span className="result-colon" aria-hidden="true">:</span>}
+              {part}
+            </React.Fragment>
+          ))}
+        </>
+      )
+    }
+    return (
+      <>
+        {result}
+        <span className="result-dot" aria-hidden="true">.</span>
+      </>
+    )
+  }
+
   const dayOffsetLabel =
     dayOffset !== 0
       ? `(${dayOffset > 0 ? '+' : '-'} ${Math.abs(dayOffset)} ${Math.abs(dayOffset) === 1 ? 'day' : 'days'})`
@@ -47,7 +72,7 @@ const Calculator = () => {
     <div className="calculator">
       <div className="result-container monospace">
         <div className="result">
-          {result || (
+          {result ? renderResult(result) : (
             <span className="result-caret" aria-hidden="true">
               |
             </span>
