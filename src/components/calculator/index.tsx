@@ -1,5 +1,6 @@
-import React, { useState, ChangeEvent } from 'react'
+import React, { useState, useRef, ChangeEvent } from 'react'
 import { handleInput } from '../../utils/timecalculator'
+import { randomInput } from '../../utils/random'
 import { debounce } from '../../utils/helpers'
 
 import './index.css'
@@ -9,10 +10,9 @@ const DEBOUNCE_DELAY = 500
 const Calculator = () => {
   const [result, setResult] = useState('')
   const [dayOffset, setDayOffset] = useState(0)
+  const inputRef = useRef<HTMLInputElement>(null)
 
-  const handleEvent = debounce((e: ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value
-
+  const processInput = (input: string) => {
     if (input === '') {
       setResult('')
       setDayOffset(0)
@@ -21,7 +21,17 @@ const Calculator = () => {
       setResult(result)
       setDayOffset(dayOffset)
     }
+  }
+
+  const handleEvent = debounce((e: ChangeEvent<HTMLInputElement>) => {
+    processInput(e.target.value)
   }, DEBOUNCE_DELAY)
+
+  const handleRandom = () => {
+    const random = randomInput()
+    if (inputRef.current) inputRef.current.value = random
+    processInput(random)
+  }
 
   const dayOffsetLabel =
     dayOffset !== 0
@@ -43,14 +53,16 @@ const Calculator = () => {
       <form className="calculator-form" onSubmit={(e) => e.preventDefault()}>
         <input
           id="calculator-input"
+          ref={inputRef}
           onChange={handleEvent}
           className="input monospace"
           type="text"
           autoComplete="off"
-          placeholder="08:00 > 17:00"
+          placeholder="08:00 > 17:30"
           autoFocus
         />
       </form>
+      <button className="random-button" onClick={handleRandom}>random</button>
       <div className="hints-container">
         <div className="hints">
           <h3 className="hints-heading">Usage</h3>

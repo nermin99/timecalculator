@@ -70,8 +70,35 @@
   opacity: 0.6;
 }
 
+.random-button {
+  margin-top: 1.5rem;
+  font-size: 1.1rem;
+  font-family: monospace;
+  color: var(--color-3);
+  background: var(--color-2);
+  border: none;
+  border-radius: 25px;
+  padding: 0.4em 1.2em;
+  cursor: pointer;
+  opacity: 0.5;
+  box-shadow:
+    var(--shadow-distance) var(--shadow-distance) calc(2 * var(--shadow-distance))
+      var(--shadow-color-1),
+    calc(-1 * var(--shadow-distance)) calc(-1 * var(--shadow-distance))
+      calc(2 * var(--shadow-distance)) var(--shadow-color-2);
+  transition: opacity 0.15s;
+}
+
+.random-button:hover {
+  opacity: 0.8;
+}
+
+.random-button:active {
+  opacity: 1;
+}
+
 .hints-container {
-  margin-top: 10rem;
+  margin-top: 6rem;
   width: 100%;
   display: flex;
   justify-content: center;
