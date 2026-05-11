@@ -46,7 +46,11 @@ const Calculator = () => {
         <>
           {parts.map((part, i) => (
             <React.Fragment key={i}>
-              {i > 0 && <span className="result-colon" aria-hidden="true">:</span>}
+              {i > 0 && (
+                <span className="result-colon" aria-hidden="true">
+                  :
+                </span>
+              )}
               {part}
             </React.Fragment>
           ))}
@@ -56,7 +60,9 @@ const Calculator = () => {
     return (
       <>
         {result}
-        <span className="result-dot" aria-hidden="true">.</span>
+        <span className="result-dot" aria-hidden="true">
+          .
+        </span>
       </>
     )
   }
@@ -72,7 +78,9 @@ const Calculator = () => {
     <div className="calculator">
       <div className="result-container monospace">
         <div className="result">
-          {result ? renderResult(result) : (
+          {result ? (
+            renderResult(result)
+          ) : (
             <span className="result-caret" aria-hidden="true">
               |
             </span>
@@ -132,7 +140,7 @@ const Calculator = () => {
               <span className="hints-code">HH:MM:SS</span>
             </p>
             <p>
-              <span className="hints-code">&gt;</span> finds the gap between two times
+              <span className="hints-code">&gt;</span> finds the duration between two times
             </p>
           </div>
         </div>
