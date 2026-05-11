@@ -73,7 +73,6 @@
 .random-button {
   margin-top: 1.5rem;
   font-size: 1.1rem;
-  font-family: monospace;
   color: var(--color-3);
   background: var(--color-2);
   border: none;
@@ -105,6 +104,7 @@
 }
 
 .hints {
+  width: 65%;
   font-size: 1.3rem;
   color: var(--color-3);
   text-align: left;
@@ -122,17 +122,25 @@
 
 .hints-table {
   opacity: 0.6;
-  border-collapse: collapse;
   margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
 }
 
-.hints-table tr + tr td {
-  padding-top: 0.3em;
+.hints-table tbody {
+  display: contents;
+}
+
+.hints-table tr {
+  display: flex;
+  align-items: center;
 }
 
 .hints-example {
   white-space: nowrap;
-  padding-right: 8em;
+  flex: 0.5;
+  text-align: left;
 }
 
 .hints-arrow {
@@ -140,8 +148,9 @@
 }
 
 .hints-desc {
-  padding-left: 6em;
   color: var(--color-3);
+  flex: 0.5;
+  text-align: right;
 }
 
 .hints-footer {
@@ -181,22 +190,27 @@
     line-height: 1.6;
   }
 
-  .hints-table tbody,
-  .hints-table tr {
+  .hints-table {
+    display: block;
+  }
+
+  .hints-table tbody {
     display: block;
   }
 
   .hints-table tr {
+    display: block;
     margin-bottom: 1em;
   }
 
   .hints-example {
     display: block;
-    padding-right: 0;
+    text-align: left;
   }
 
   .hints-arrow {
     display: inline;
+    padding: 0;
   }
 
   .hints-desc {
