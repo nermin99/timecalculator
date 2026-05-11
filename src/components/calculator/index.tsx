@@ -30,12 +30,19 @@ const Calculator = () => {
 
   return (
     <div className="calculator">
-      <div className="result-area monospace">
-        <div className="result">{result}</div>
+      <div className="result-container monospace">
+        <div className="result">
+          {result || (
+            <span className="result-caret" aria-hidden="true">
+              |
+            </span>
+          )}
+        </div>
         <div className="day-offset">{dayOffsetLabel}</div>
       </div>
       <form className="calculator-form" onSubmit={(e) => e.preventDefault()}>
         <input
+          id="calculator-input"
           onChange={handleEvent}
           className="input monospace"
           type="text"

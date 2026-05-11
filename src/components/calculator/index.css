@@ -6,14 +6,6 @@
   align-items: center;
 }
 
-.result-area {
-  height: 33vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
 .input {
   font-size: inherit;
   font-family: inherit;
@@ -22,26 +14,6 @@
   border: none;
   border-radius: 25px;
   /* user-select: none; */ /* Buggy on safari! */
-}
-
-.input:focus {
-  outline: none;
-}
-
-.result {
-  color: var(--color-3);
-  font-size: 4.5rem;
-  line-height: 1;
-  min-height: 4.5rem;
-  white-space: nowrap;
-}
-
-.day-offset {
-  color: var(--color-3);
-  font-size: 1.5rem;
-  line-height: 1;
-  min-height: 1.5rem;
-  opacity: 0.6;
 }
 
 /* Color Theme */
@@ -53,6 +25,49 @@
       var(--shadow-color-1),
     calc(-1 * var(--shadow-distance)) calc(-1 * var(--shadow-distance))
       calc(2 * var(--shadow-distance)) var(--shadow-color-2);
+}
+
+.input:focus {
+  outline: none;
+}
+
+.result-container {
+  height: 33vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.result {
+  color: var(--color-3);
+  font-size: 4.5rem;
+  line-height: 1;
+  min-height: 4.5rem;
+  white-space: nowrap;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.result-caret {
+  animation: blink 1.1s step-start infinite;
+  opacity: 0.4;
+}
+
+.day-offset {
+  color: var(--color-3);
+  font-size: 1.5rem;
+  line-height: 1;
+  min-height: 1.5rem;
+  opacity: 0.6;
 }
 
 .hints-container {
@@ -118,7 +133,7 @@
     width: 85vw;
   }
 
-  .result-area {
+  .result-container {
     height: 50vh;
   }
 
