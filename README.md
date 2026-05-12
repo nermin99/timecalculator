@@ -1,6 +1,6 @@
 # Time Calculator ⏱
 
-![test image size](img/timecalculator.png)
+![Time Calculator screenshot](timecalculator.png)
 
 ## Examples
 
